@@ -190,19 +190,27 @@
         }
 
         // 2. 당원가입 유효성 검사 (입력해주세요! / 감사합니다!)
-        function validateAndSubmit() {
-            const name = document.getElementById('userName').value.trim();
-            const email = document.getElementById('userEmail').value.trim();
+function validateAndSubmit() {
+    const name = document.getElementById('userName').value.trim();
+    const email = document.getElementById('userEmail').value.trim();
+    
+    // 이메일 형식을 검사하는 정규표현식입니다.
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-            if (name === "" || email === "") {
-                alert('입력해주세요!');
-            } else {
-                alert('감사합니다! 미래연대당의 당원이 되신 것을 환영합니다.');
-                closeModal();
-                document.getElementById('userName').value = "";
-                document.getElementById('userEmail').value = "";
-            }
-        }
+    if (name === "" || email === "") {
+        alert('입력해주세요!');
+    } 
+    // 추가된 부분: 이메일 형식이 정규표현식과 맞지 않을 때
+    else if (!emailRegex.test(email)) {
+        alert('올바른 이메일 형식을 입력해주세요! (예: name@example.com)');
+    } 
+    else {
+        alert('감사합니다! 미래연대당의 당원이 되신 것을 환영합니다.');
+        closeModal();
+        document.getElementById('userName').value = "";
+        document.getElementById('userEmail').value = "";
+    }
+}
 
         // 3. 지지하기 & 꽃가루
         let count = 1245678;
