@@ -8,46 +8,127 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         :root {
-            --primary-color: #003366; /* 신뢰의 네이비 */
-            --accent-color: #007acc;  /* 강조용 블루 */
-            --bg-light: #f8f9fa;
-            --text-dark: #222;
-        }
+    --brand-teal: #50b5b5; /* 새미래민주당 특유의 민트/청록색 */
+    --brand-navy: #1d458b; /* 로고의 진한 남색 */
+    --text-gray: #333;
+    --border-light: #e1e1e1;
+}
 
-        body { font-family: 'Pretendard', sans-serif; margin: 0; background: var(--bg-light); color: var(--text-dark); scroll-behavior: smooth; }
+.main-header {
+    background-color: #fff;
+    border-bottom: 1px solid var(--border-light);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 80px;
+    display: flex;
+    align-items: center;
+}
 
-        /* 1. 네비게이션 바 */
-        nav { background: white; padding: 15px 50px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .logo { font-size: 24px; font-weight: bold; color: var(--primary-color); cursor: pointer; }
-        .nav-links a { text-decoration: none; color: #555; margin-left: 25px; font-weight: 500; transition: 0.3s; }
-        .nav-links a:hover { color: var(--accent-color); }
+.nav-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
 
-        /* 2. 히어로 섹션 */
-        .hero { background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white; padding: 100px 20px; text-align: center; }
-        .hero h1 { font-size: 48px; margin-bottom: 20px; }
-        .hero p { font-size: 20px; opacity: 0.9; margin-bottom: 30px; }
-        .btn-join { background: #ffcc00; color: #333; border: none; padding: 15px 40px; font-size: 18px; font-weight: bold; border-radius: 50px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .btn-join:hover { transform: scale(1.05); background: white; }
+/* 로고 스타일 */
+.logo {
+    font-size: 24px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.logo-light { color: var(--brand-teal); }
+.logo-dark { color: var(--brand-navy); }
 
-        /* 3. 상호작용 정책 탭 */
-        .section { padding: 80px 20px; max-width: 1000px; margin: 0 auto; text-align: center; }
-        .tabs { display: flex; justify-content: center; margin-bottom: 30px; }
-        .tab { padding: 10px 30px; border: 1px solid #ddd; cursor: pointer; background: white; transition: 0.3s; }
-        .tab.active { background: var(--primary-color); color: white; border-color: var(--primary-color); }
-        .tab-content { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); min-height: 200px; }
+/* 중앙 메뉴 스타일 */
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 40px;
+}
+.nav-menu li a {
+    text-decoration: none;
+    color: var(--text-gray);
+    font-weight: 700;
+    font-size: 18px;
+    transition: color 0.2s;
+}
+.nav-menu li a:hover { color: var(--brand-teal); }
 
-        /* 4. 지지하기 버튼 (인터랙티브) */
-        .support-box { background: white; border-radius: 20px; padding: 50px; margin-top: 50px; border: 2px dashed var(--accent-color); }
-        .support-count { font-size: 40px; font-weight: bold; color: var(--accent-color); margin: 20px 0; }
-        .btn-support { background: var(--accent-color); color: white; border: none; padding: 20px 50px; font-size: 20px; border-radius: 10px; cursor: pointer; }
+/* 오른쪽 영역 스타일 */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
 
-        /* 5. 모달 (입당 신청서) */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 40px; border-radius: 15px; width: 90%; max-width: 400px; text-align: left; }
-        .modal-content input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+.user-links {
+    font-size: 14px;
+    color: #666;
+}
+.user-links a { text-decoration: none; color: inherit; }
+.divider { margin: 0 8px; color: #ccc; }
+
+/* 전체메뉴 버튼 (청록색 박스) */
+.menu-toggle {
+    background-color: var(--brand-teal);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    height: 80px; /* 헤더 높이에 맞춤 */
+    width: 90px;
+}
+
+.menu-toggle span { font-size: 12px; font-weight: bold; margin-top: 5px; }
+
+/* 햄버거 아이콘 */
+.hamburger { width: 25px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; }
+.hamburger span { width: 100%; height: 2px; background-color: white; margin: 0; }
     </style>
 </head>
 <body>
+    <header class="main-header">
+    <nav class="nav-container">
+        <div class="logo" onclick="location.href='/'">
+            <span class="logo-light">새미래</span><span class="logo-dark">민주당</span>
+        </div>
+
+        <ul class="nav-menu">
+            <li><a href="#">새민주</a></li>
+            <li><a href="#">소식</a></li>
+            <li><a href="#">콘텐츠</a></li>
+            <li><a href="#">후원</a></li>
+            <li><a href="#">당원</a></li>
+        </ul>
+
+        <div class="nav-right">
+            <div class="user-links">
+                <a href="#">회원가입</a>
+                <span class="divider">|</span>
+                <a href="#">로그인</a>
+            </div>
+            <button class="menu-toggle">
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <span>전체메뉴</span>
+            </button>
+        </div>
+    </nav>
+</header>
 
     <nav>
         <div class="logo" onclick="location.reload()">🏛️ 미래혁신당</div>
