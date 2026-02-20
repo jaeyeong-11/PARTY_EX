@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>새미래민주당 - 국민과 함께하는 변화</title>
+    <title>미래연대당 - 새로운 연대로 만드는 미래</title>
     <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
-        /* 1. 변수 및 초기화 */
         :root {
-            --brand-teal: #50b5b5; 
-            --brand-navy: #1d458b; 
+            --brand-blue: #007acc; /* 전체메뉴용 파랑 */
+            --brand-navy: #1d458b; /* 로고 및 헤더 남색 */
             --text-gray: #333;
             --border-light: #e1e1e1;
             --bg-light: #f8f9fa;
@@ -18,7 +17,7 @@
 
         body { font-family: 'Pretendard', sans-serif; margin: 0; background: var(--bg-light); color: var(--text-gray); scroll-behavior: smooth; }
 
-        /* 2. 상단 바 (Header) 스타일 */
+        /* 1. 상단 바 스타일 */
         .main-header {
             background-color: #fff;
             border-bottom: 1px solid var(--border-light);
@@ -40,21 +39,22 @@
             padding: 0 20px;
         }
 
-        .logo { font-size: 24px; font-weight: 800; cursor: pointer; display: flex; align-items: center; text-decoration: none; }
-        .logo-light { color: var(--brand-teal); }
-        .logo-dark { color: var(--brand-navy); }
+        .logo { font-size: 26px; font-weight: 800; cursor: pointer; display: flex; align-items: center; text-decoration: none; }
+        .logo-main { color: var(--brand-navy); }
+        .logo-point { color: var(--brand-blue); }
 
         .nav-menu { display: flex; list-style: none; gap: 40px; margin: 0; padding: 0; }
         .nav-menu li a { text-decoration: none; color: var(--text-gray); font-weight: 700; font-size: 18px; transition: color 0.2s; }
-        .nav-menu li a:hover { color: var(--brand-teal); }
+        .nav-menu li a:hover { color: var(--brand-blue); }
 
         .nav-right { display: flex; align-items: center; gap: 20px; }
         .user-links { font-size: 14px; color: #666; }
         .user-links a { text-decoration: none; color: inherit; }
         .divider { margin: 0 8px; color: #ccc; }
 
+        /* 전체메뉴 버튼 컬러: 파랑(#007acc)으로 변경 */
         .menu-toggle {
-            background-color: var(--brand-teal); color: white; border: none;
+            background-color: var(--brand-blue); color: white; border: none;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             cursor: pointer; height: 80px; width: 90px;
         }
@@ -62,9 +62,9 @@
         .hamburger { width: 25px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; }
         .hamburger span { width: 100%; height: 2px; background-color: white; }
 
-        /* 3. 본문 (Hero & Sections) 스타일 */
+        /* 2. 본문 스타일 */
         .hero { 
-            background: linear-gradient(135deg, var(--brand-navy), var(--brand-teal)); 
+            background: linear-gradient(135deg, var(--brand-navy), #005a9e); 
             color: white; padding: 120px 20px; text-align: center; 
         }
         .hero h1 { font-size: 48px; margin-bottom: 20px; font-weight: 800; }
@@ -77,32 +77,12 @@
         }
         .btn-join:hover { transform: scale(1.05); background: white; }
 
-        .section { padding: 100px 20px; max-width: 1000px; margin: 0 auto; text-align: center; }
-        .section h2 { font-size: 32px; color: var(--brand-navy); margin-bottom: 40px; }
+        .section { padding: 80px 20px; max-width: 1000px; margin: 0 auto; text-align: center; }
+        .support-box { background: white; border-radius: 20px; padding: 60px; border: 2px dashed var(--brand-blue); }
+        .support-count { font-size: 48px; font-weight: bold; color: var(--brand-blue); margin: 25px 0; }
+        .btn-support { background: var(--brand-blue); color: white; border: none; padding: 20px 60px; font-size: 22px; font-weight: bold; border-radius: 12px; cursor: pointer; }
 
-        .tabs { display: flex; justify-content: center; margin-bottom: 30px; gap: 10px; }
-        .tab { 
-            padding: 12px 35px; border: 1px solid #ddd; cursor: pointer; 
-            background: white; border-radius: 5px; font-weight: bold; transition: 0.3s; 
-        }
-        .tab.active { background: var(--brand-navy); color: white; border-color: var(--brand-navy); }
-
-        .tab-content { 
-            background: white; padding: 50px; border-radius: 20px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); min-height: 150px; transition: 0.3s;
-        }
-
-        .support-box { 
-            background: white; border-radius: 20px; padding: 60px; 
-            border: 2px dashed var(--brand-teal); 
-        }
-        .support-count { font-size: 48px; font-weight: bold; color: var(--brand-teal); margin: 25px 0; }
-        .btn-support { 
-            background: var(--brand-teal); color: white; border: none; 
-            padding: 20px 60px; font-size: 22px; font-weight: bold; border-radius: 12px; cursor: pointer; 
-        }
-
-        /* 4. 모달 스타일 */
+        /* 3. 모달 스타일 */
         .modal { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; 
@@ -113,7 +93,7 @@
         }
         .modal-content input { 
             width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; 
-            border-radius: 8px; box-sizing: border-box; 
+            border-radius: 8px; box-sizing: border-box; font-size: 16px;
         }
     </style>
 </head>
@@ -122,15 +102,14 @@
     <header class="main-header">
         <nav class="nav-container">
             <a href="/" class="logo">
-                <span class="logo-light">새미래</span><span class="logo-dark">민주당</span>
+                <span class="logo-main">미래연대</span><span class="logo-point">당</span>
             </a>
 
             <ul class="nav-menu">
-                <li><a href="#policy">핵심정책</a></li>
                 <li><a href="#support">지지현황</a></li>
-                <li><a href="#">콘텐츠</a></li>
-                <li><a href="#">후원</a></li>
-                <li><a href="#" onclick="openModal()">당원</a></li>
+                <li><a href="#" onclick="openModal()">당원가입</a></li>
+                <li><a href="#">정당소식</a></li>
+                <li><a href="#">후원하기</a></li>
             </ul>
 
             <div class="nav-right">
@@ -139,10 +118,8 @@
                     <span class="divider">|</span>
                     <a href="#">로그인</a>
                 </div>
-                <button class="menu-toggle" onclick="alert('전체 메뉴를 준비 중입니다.')">
-                    <div class="hamburger">
-                        <span></span><span></span><span></span>
-                    </div>
+                <button class="menu-toggle">
+                    <div class="hamburger"><span></span><span></span><span></span></div>
                     <span>전체메뉴</span>
                 </button>
             </div>
@@ -150,73 +127,60 @@
     </header>
 
     <div class="hero">
-        <h1>국민의 목소리, 내일의 변화</h1>
-        <p>새미래민주당은 더 나은 대한민국을 위해 함께 걷습니다.</p>
-        <button class="btn-join" onclick="openModal()">지금 바로 입당하기 →</button>
-    </div>
-
-    <div class="section" id="policy">
-        <h2>우리의 핵심 약속</h2>
-        <div class="tabs">
-            <div class="tab active" onclick="changeTab(0, this)">📈 경제 부흥</div>
-            <div class="tab" onclick="changeTab(1, this)">🌿 환경 보호</div>
-            <div class="tab" onclick="changeTab(2, this)">🎓 교육 혁신</div>
-        </div>
-        <div class="tab-content" id="tabContent">
-            <h3>📈 더 강력한 경제 성장을 약속합니다.</h3>
-            <p>중소기업 지원 확대와 신산업 육성을 통해 일자리를 창출하고 서민 경제를 살리겠습니다.</p>
-        </div>
+        <h1>연대로 만드는 새로운 미래</h1>
+        <p>미래연대당은 국민의 평범한 일상을 지키는 정치를 합니다.</p>
+        <button class="btn-join" onclick="openModal()">미래연대당과 함께하기 →</button>
     </div>
 
     <div class="section" id="support">
         <div class="support-box">
-            <h2>변화에 공감하신다면 지지해 주세요</h2>
-            <p>현재 변화에 동참해주신 소중한 분들</p>
+            <h2>우리의 연대에 공감하신다면</h2>
             <div class="support-count" id="count">1,245,678</div>
-            <button class="btn-support" onclick="supportAction()">👍 변화 지지하기</button>
+            <button class="btn-support" onclick="supportAction()">👍 지지 보태기</button>
         </div>
     </div>
 
     <div class="modal" id="modal">
         <div class="modal-content">
             <h3>당원 가입 신청</h3>
-            <p>새미래민주당과 함께 세상을 바꿔주세요.</p>
-            <input type="text" placeholder="이름을 입력하세요">
-            <input type="email" placeholder="이메일 주소를 입력하세요">
-            <button class="btn-support" style="width: 100%; margin-top: 20px;" onclick="closeModal()">제출하고 참여하기</button>
+            <p>미래연대당의 주인이 되어주세요.</p>
+            <input type="text" id="userName" placeholder="이름을 입력하세요">
+            <input type="email" id="userEmail" placeholder="이메일 주소를 입력하세요">
+            <button class="btn-support" style="width: 100%; margin-top: 20px;" onclick="validateAndSubmit()">제출하기</button>
             <p style="text-align: center; color: #888; font-size: 13px; cursor: pointer; margin-top: 15px;" onclick="closeModal()">닫기</p>
         </div>
     </div>
 
     <script>
-        // 1. 정책 탭 변경
-        const policies = [
-            { title: "📈 경제 부흥", desc: "중소기업 지원 확대와 신산업 육성을 통해 일자리를 창출하고 서민 경제를 살리겠습니다." },
-            { title: "🌿 환경 보호", desc: "탄소 중립 실현과 신재생 에너지 투자를 통해 우리 아이들에게 깨끗한 미래를 물려주겠습니다." },
-            { title: "🎓 교육 혁신", desc: "누구나 평등한 교육 기회를 갖고, 창의적인 인재가 자라날 수 있는 미래 교육 시스템을 구축하겠습니다." }
-        ];
+        // 1. 입당 신청 유효성 검사 및 제출
+        function validateAndSubmit() {
+            const name = document.getElementById('userName').value.trim();
+            const email = document.getElementById('userEmail').value.trim();
 
-        function changeTab(index, el) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            el.classList.add('active');
-            const content = document.getElementById('tabContent');
-            content.style.opacity = 0;
-            setTimeout(() => {
-                content.innerHTML = `<h3>${policies[index].title}</h3><p>${policies[index].desc}</p>`;
-                content.style.opacity = 1;
-            }, 200);
+            if (name === "" || email === "") {
+                // 공백일 때 경고창
+                alert('입력해주세요!');
+            } else {
+                // 제대로 입력했을 때 감사 인사
+                alert('감사합니다! 미래연대당의 당원이 되신 것을 환영합니다.');
+                
+                // 입력창 초기화 및 모달 닫기
+                document.getElementById('userName').value = "";
+                document.getElementById('userEmail').value = "";
+                closeModal();
+            }
         }
 
-        // 2. 지지하기 버튼 (꽃가루)
+        // 2. 지지하기 및 꽃가루
         let count = 1245678;
         function supportAction() {
             count++;
             document.getElementById('count').innerText = count.toLocaleString();
             confetti({
                 particleCount: 150, spread: 70, origin: { y: 0.6 },
-                colors: ['#50b5b5', '#1d458b', '#ffcc00']
+                colors: ['#007acc', '#1d458b', '#ffcc00']
             });
-            alert('지지에 감사드립니다!');
+            alert('연대의 소중한 한 표, 감사합니다!');
         }
 
         // 3. 모달 제어
