@@ -3,145 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>미래혁신당 - 국민과 함께하는 변화</title>
+    <title>새미래민주당 - 국민과 함께하는 변화</title>
     <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
+        /* 1. 변수 및 초기화 */
         :root {
-    --brand-teal: #50b5b5; /* 새미래민주당 특유의 민트/청록색 */
-    --brand-navy: #1d458b; /* 로고의 진한 남색 */
-    --text-gray: #333;
-    --border-light: #e1e1e1;
-}
+            --brand-teal: #50b5b5; 
+            --brand-navy: #1d458b; 
+            --text-gray: #333;
+            --border-light: #e1e1e1;
+            --bg-light: #f8f9fa;
+        }
 
-.main-header {
-    background-color: #fff;
-    border-bottom: 1px solid var(--border-light);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    height: 80px;
-    display: flex;
-    align-items: center;
-}
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background: var(--bg-light); color: var(--text-gray); scroll-behavior: smooth; }
 
-.nav-container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-}
+        /* 2. 상단 바 (Header) 스타일 */
+        .main-header {
+            background-color: #fff;
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            height: 80px;
+            display: flex;
+            align-items: center;
+        }
 
-/* 로고 스타일 */
-.logo {
-    font-size: 24px;
-    font-weight: 800;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-}
-.logo-light { color: var(--brand-teal); }
-.logo-dark { color: var(--brand-navy); }
+        .nav-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
 
-/* 중앙 메뉴 스타일 */
-.nav-menu {
-    display: flex;
-    list-style: none;
-    gap: 40px;
-}
-.nav-menu li a {
-    text-decoration: none;
-    color: var(--text-gray);
-    font-weight: 700;
-    font-size: 18px;
-    transition: color 0.2s;
-}
-.nav-menu li a:hover { color: var(--brand-teal); }
+        .logo { font-size: 24px; font-weight: 800; cursor: pointer; display: flex; align-items: center; text-decoration: none; }
+        .logo-light { color: var(--brand-teal); }
+        .logo-dark { color: var(--brand-navy); }
 
-/* 오른쪽 영역 스타일 */
-.nav-right {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
+        .nav-menu { display: flex; list-style: none; gap: 40px; margin: 0; padding: 0; }
+        .nav-menu li a { text-decoration: none; color: var(--text-gray); font-weight: 700; font-size: 18px; transition: color 0.2s; }
+        .nav-menu li a:hover { color: var(--brand-teal); }
 
-.user-links {
-    font-size: 14px;
-    color: #666;
-}
-.user-links a { text-decoration: none; color: inherit; }
-.divider { margin: 0 8px; color: #ccc; }
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .user-links { font-size: 14px; color: #666; }
+        .user-links a { text-decoration: none; color: inherit; }
+        .divider { margin: 0 8px; color: #ccc; }
 
-/* 전체메뉴 버튼 (청록색 박스) */
-.menu-toggle {
-    background-color: var(--brand-teal);
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    height: 80px; /* 헤더 높이에 맞춤 */
-    width: 90px;
-}
+        .menu-toggle {
+            background-color: var(--brand-teal); color: white; border: none;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; height: 80px; width: 90px;
+        }
+        .menu-toggle span { font-size: 12px; font-weight: bold; margin-top: 5px; }
+        .hamburger { width: 25px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; }
+        .hamburger span { width: 100%; height: 2px; background-color: white; }
 
-.menu-toggle span { font-size: 12px; font-weight: bold; margin-top: 5px; }
+        /* 3. 본문 (Hero & Sections) 스타일 */
+        .hero { 
+            background: linear-gradient(135deg, var(--brand-navy), var(--brand-teal)); 
+            color: white; padding: 120px 20px; text-align: center; 
+        }
+        .hero h1 { font-size: 48px; margin-bottom: 20px; font-weight: 800; }
+        .hero p { font-size: 20px; opacity: 0.9; margin-bottom: 40px; }
+        
+        .btn-join { 
+            background: #ffcc00; color: #333; border: none; padding: 18px 50px; 
+            font-size: 20px; font-weight: bold; border-radius: 50px; cursor: pointer; 
+            transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+        }
+        .btn-join:hover { transform: scale(1.05); background: white; }
 
-/* 햄버거 아이콘 */
-.hamburger { width: 25px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; }
-.hamburger span { width: 100%; height: 2px; background-color: white; margin: 0; }
+        .section { padding: 100px 20px; max-width: 1000px; margin: 0 auto; text-align: center; }
+        .section h2 { font-size: 32px; color: var(--brand-navy); margin-bottom: 40px; }
+
+        .tabs { display: flex; justify-content: center; margin-bottom: 30px; gap: 10px; }
+        .tab { 
+            padding: 12px 35px; border: 1px solid #ddd; cursor: pointer; 
+            background: white; border-radius: 5px; font-weight: bold; transition: 0.3s; 
+        }
+        .tab.active { background: var(--brand-navy); color: white; border-color: var(--brand-navy); }
+
+        .tab-content { 
+            background: white; padding: 50px; border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); min-height: 150px; transition: 0.3s;
+        }
+
+        .support-box { 
+            background: white; border-radius: 20px; padding: 60px; 
+            border: 2px dashed var(--brand-teal); 
+        }
+        .support-count { font-size: 48px; font-weight: bold; color: var(--brand-teal); margin: 25px 0; }
+        .btn-support { 
+            background: var(--brand-teal); color: white; border: none; 
+            padding: 20px 60px; font-size: 22px; font-weight: bold; border-radius: 12px; cursor: pointer; 
+        }
+
+        /* 4. 모달 스타일 */
+        .modal { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; 
+        }
+        .modal-content { 
+            background: white; padding: 40px; border-radius: 20px; width: 90%; 
+            max-width: 400px; text-align: left; 
+        }
+        .modal-content input { 
+            width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; 
+            border-radius: 8px; box-sizing: border-box; 
+        }
     </style>
 </head>
 <body>
+
     <header class="main-header">
-    <nav class="nav-container">
-        <div class="logo" onclick="location.href='/'">
-            <span class="logo-light">새미래</span><span class="logo-dark">민주당</span>
-        </div>
+        <nav class="nav-container">
+            <a href="/" class="logo">
+                <span class="logo-light">새미래</span><span class="logo-dark">민주당</span>
+            </a>
 
-        <ul class="nav-menu">
-            <li><a href="#">새민주</a></li>
-            <li><a href="#">소식</a></li>
-            <li><a href="#">콘텐츠</a></li>
-            <li><a href="#">후원</a></li>
-            <li><a href="#">당원</a></li>
-        </ul>
+            <ul class="nav-menu">
+                <li><a href="#policy">핵심정책</a></li>
+                <li><a href="#support">지지현황</a></li>
+                <li><a href="#">콘텐츠</a></li>
+                <li><a href="#">후원</a></li>
+                <li><a href="#" onclick="openModal()">당원</a></li>
+            </ul>
 
-        <div class="nav-right">
-            <div class="user-links">
-                <a href="#">회원가입</a>
-                <span class="divider">|</span>
-                <a href="#">로그인</a>
-            </div>
-            <button class="menu-toggle">
-                <div class="hamburger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+            <div class="nav-right">
+                <div class="user-links">
+                    <a href="#">회원가입</a>
+                    <span class="divider">|</span>
+                    <a href="#">로그인</a>
                 </div>
-                <span>전체메뉴</span>
-            </button>
-        </div>
-    </nav>
-</header>
-
-    <nav>
-        <div class="logo" onclick="location.reload()">🏛️ 미래혁신당</div>
-        <div class="nav-links">
-            <a href="#policy">핵심정책</a>
-            <a href="#support">지지현황</a>
-            <a href="#" onclick="openModal()">입당안내</a>
-        </div>
-    </nav>
+                <button class="menu-toggle" onclick="alert('전체 메뉴를 준비 중입니다.')">
+                    <div class="hamburger">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <span>전체메뉴</span>
+                </button>
+            </div>
+        </nav>
+    </header>
 
     <div class="hero">
         <h1>국민의 목소리, 내일의 변화</h1>
-        <p>우리는 더 나은 대한민국을 위해 함께 걷습니다.</p>
+        <p>새미래민주당은 더 나은 대한민국을 위해 함께 걷습니다.</p>
         <button class="btn-join" onclick="openModal()">지금 바로 입당하기 →</button>
     </div>
 
@@ -160,8 +170,8 @@
 
     <div class="section" id="support">
         <div class="support-box">
-            <h2>우리의 변화에 공감하신다면?</h2>
-            <p>지금까지 많은 분들이 변화에 동참해주셨습니다.</p>
+            <h2>변화에 공감하신다면 지지해 주세요</h2>
+            <p>현재 변화에 동참해주신 소중한 분들</p>
             <div class="support-count" id="count">1,245,678</div>
             <button class="btn-support" onclick="supportAction()">👍 변화 지지하기</button>
         </div>
@@ -170,16 +180,16 @@
     <div class="modal" id="modal">
         <div class="modal-content">
             <h3>당원 가입 신청</h3>
-            <p>미래혁신당과 함께 세상을 바꿔주세요.</p>
+            <p>새미래민주당과 함께 세상을 바꿔주세요.</p>
             <input type="text" placeholder="이름을 입력하세요">
             <input type="email" placeholder="이메일 주소를 입력하세요">
             <button class="btn-support" style="width: 100%; margin-top: 20px;" onclick="closeModal()">제출하고 참여하기</button>
-            <p style="text-align: center; color: #888; font-size: 12px; cursor: pointer;" onclick="closeModal()">닫기</p>
+            <p style="text-align: center; color: #888; font-size: 13px; cursor: pointer; margin-top: 15px;" onclick="closeModal()">닫기</p>
         </div>
     </div>
 
     <script>
-        // 1. 정책 탭 변경 함수
+        // 1. 정책 탭 변경
         const policies = [
             { title: "📈 경제 부흥", desc: "중소기업 지원 확대와 신산업 육성을 통해 일자리를 창출하고 서민 경제를 살리겠습니다." },
             { title: "🌿 환경 보호", desc: "탄소 중립 실현과 신재생 에너지 투자를 통해 우리 아이들에게 깨끗한 미래를 물려주겠습니다." },
@@ -189,7 +199,6 @@
         function changeTab(index, el) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             el.classList.add('active');
-            
             const content = document.getElementById('tabContent');
             content.style.opacity = 0;
             setTimeout(() => {
@@ -198,29 +207,21 @@
             }, 200);
         }
 
-        // 2. 지지하기 버튼 (꽃가루 & 카운팅)
+        // 2. 지지하기 버튼 (꽃가루)
         let count = 1245678;
         function supportAction() {
             count++;
             document.getElementById('count').innerText = count.toLocaleString();
-            
-            // 꽃가루 효과!
             confetti({
-                particleCount: 150,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ['#003366', '#007acc', '#ffcc00']
+                particleCount: 150, spread: 70, origin: { y: 0.6 },
+                colors: ['#50b5b5', '#1d458b', '#ffcc00']
             });
-            
-            alert('지지에 감사드립니다! 당신의 소중한 한 표가 세상을 바꿉니다.');
+            alert('지지에 감사드립니다!');
         }
 
         // 3. 모달 제어
         function openModal() { document.getElementById('modal').style.display = 'flex'; }
-        function closeModal() { 
-            alert('신청이 완료되었습니다! 환영합니다.');
-            document.getElementById('modal').style.display = 'none'; 
-        }
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
     </script>
 </body>
 </html>
