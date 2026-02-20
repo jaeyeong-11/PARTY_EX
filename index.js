@@ -1,17 +1,22 @@
 const express = require('express');
+const path = require('path');
 const app = express();
 
-// ⭐ 마법의 한 줄: 'public' 폴더 안의 파일들을 누구나 주소로 볼 수 있게 공개합니다!
-app.use(express.static('public'));
+// 정적 파일(HTML, CSS, JS) 제공
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (req, res) => {
-  res.send('이미지 호스팅 서버가 쌩쌩하게 돌아가고 있습니다! 🖼️');
+// 가상의 지지자 수 데이터 (서버가 켜져 있는 동안 유지됨)
+let supportCount = 1245678;
+
+// 지지하기 버튼을 눌렀을 때 호출될 API
+app.get('/api/support', (req, res) => {
+    supportCount++;
+    res.json({ count: supportCount });
 });
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`서버 켜짐! 포트: ${port}`);
+    console.log(`정당 본부 서버 가동 중: http://localhost:${port}`);
 });
 
-// Vercel을 위해 썼던 코드는 그대로 둡니다.
 module.exports = app;
