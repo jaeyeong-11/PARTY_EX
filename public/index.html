@@ -242,6 +242,24 @@ async function validateAndSubmit() {
             alert('연대의 소중한 한 표, 감사합니다!');
         }
 
+        // [추가] 페이지가 로딩되면 자동으로 실행되는 함수
+window.onload = async function() {
+    try {
+        // 서버에 "지금 몇 명이야?"라고 물어봅니다.
+        const response = await fetch('/api/count');
+        const data = await response.json();
+        
+        // 화면에 있는 id="count" 자리에 진짜 숫자를 넣습니다.
+        // 숫자가 세 자리마다 콤마(,)가 찍히도록 toLocaleString()을 썼어요.
+        const countElement = document.getElementById('count');
+        if (countElement) {
+            countElement.innerText = Number(data.count).toLocaleString();
+        }
+    } catch (e) {
+        console.error("실시간 인원수를 가져오는 데 실패했습니다.", e);
+    }
+};
+
         function openModal() { document.getElementById('modal').style.display = 'flex'; }
         function closeModal() { document.getElementById('modal').style.display = 'none'; }
     </script>
