@@ -44,7 +44,24 @@ app.post('/api/join', async (req, res) => {
   }
 });
 
+// [추가] 현재 당원이 몇 명인지 세어서 알려주는 주소
+app.get('/api/count', async (req, res) => {
+  try {
+    const client = await db.connect();
+    // members 테이블의 전체 행 개수를 셉니다.
+    const { rows } = await client.sql`SELECT COUNT(*) FROM members;`;
+    client.release();
+    
+    // { count: 5 } 이런 식으로 결과를 보내줍니다.
+    res.json({ count: rows[0].count });
+  } catch (error) {
+    console.error('숫자 세기 에러:', error);
+    res.status(500).json({ error: '데이터를 가져올 수 없습니다.' });
+  }
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`미래연대당 서버 가동 중!`));
 module.exports = app;
+
 
