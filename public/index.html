@@ -190,25 +190,43 @@
         }
 
         // 2. 당원가입 유효성 검사 (입력해주세요! / 감사합니다!)
-function validateAndSubmit() {
+async function validateAndSubmit() {
     const name = document.getElementById('userName').value.trim();
     const email = document.getElementById('userEmail').value.trim();
-    
-    // 이메일 형식을 검사하는 정규표현식입니다.
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+    // 1. 빈칸 체크
     if (name === "" || email === "") {
         alert('입력해주세요!');
+        return;
     } 
-    // 추가된 부분: 이메일 형식이 정규표현식과 맞지 않을 때
-    else if (!emailRegex.test(email)) {
+
+    // 2. 이메일 형식 체크
+    if (!emailRegex.test(email)) {
         alert('올바른 이메일 형식을 입력해주세요! (예: name@example.com)');
-    } 
-    else {
-        alert('감사합니다! 미래연대당의 당원이 되신 것을 환영합니다.');
-        closeModal();
-        document.getElementById('userName').value = "";
-        document.getElementById('userEmail').value = "";
+        return;
+    }
+
+    // 🚀 [추가된 부분] 서버로 데이터 진짜 보내기
+    try {
+        const response = await fetch('/api/join', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email }) // 이름과 이메일을 포장해서 보냄
+        });
+
+        if (response.ok) {
+            // 성공했을 때만 감사 인사!
+            alert('감사합니다! 미래연대당의 당원이 되신 것을 환영합니다.');
+            closeModal();
+            document.getElementById('userName').value = "";
+            document.getElementById('userEmail').value = "";
+        } else {
+            alert('서버 저장에 실패했습니다. (DB 연결을 확인하세요)');
+        }
+    } catch (error) {
+        console.error('에러 발생:', error);
+        alert('서버와 연결할 수 없습니다.');
     }
 }
 
