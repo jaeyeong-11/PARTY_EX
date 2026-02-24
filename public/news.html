@@ -112,23 +112,47 @@
     </div>
 
     <script>
-        // 뉴스 데이터 불러오기
-        window.onload = async function() {
-            try {
-                const res = await fetch('/api/news');
-                const data = await res.json();
-                const list = document.getElementById('newsList');
-                if (data.length === 0) {
-                    list.innerHTML = "<tr><td colspan='3' style='padding: 30px;'>등록된 소식이 없습니다.</td></tr>";
-                    return;
-                }
-                data.forEach((item, index) => {
-                    const date = new Date(item.created_at).toLocaleDateString();
-                    // 번호는 전체 개수에서 줄어드는 식으로 표시 (최신순)
-                    list.innerHTML += `<tr><td>${data.length - index}</td><td style="text-align:left;"><span class="cat-tag">[${item.category}]</span> ${item.title}</td><td>${date}</td></tr>`;
-                });
-            } catch (e) { console.error(e); }
-        };
+// 1. 소식을 불러오는 함수를 따로 분리합니다.
+async function loadNews(category = '논평·브리핑') {
+    try {
+        const res = await fetch(`/api/news?category=${encodeURIComponent(category)}`);
+        const data = await res.json();
+        const list = document.getElementById('newsList');
+        
+        list.innerHTML = ""; // 기존 목록 지우기
+        
+        if (data.length === 0) {
+            list.innerHTML = "<tr><td colspan='3' style='padding:30px;'>등록된 소식이 없습니다.</td></tr>";
+            return;
+        }
+
+        data.forEach((item, index) => {
+            const date = new Date(item.created_at).toLocaleDateString();
+            list.innerHTML += `
+                <tr>
+                    <td>${data.length - index}</td>
+                    <td style="text-align:left;"><span class="cat-tag">[${item.category}]</span> ${item.title}</td>
+                    <td>${date}</td>
+                </tr>`;
+        });
+    } catch (e) { console.error(e); }
+}
+
+// 2. 탭 클릭 이벤트 설정
+document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+        // 기존 활성화된 탭 스타일 제거
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        // 클릭한 탭 활성화
+        this.classList.add('active');
+        
+        // 탭에 적힌 글자(예: '보도자료')로 데이터 다시 불러오기
+        loadNews(this.innerText);
+    });
+});
+
+// 3. 페이지 처음 열릴 때 실행
+window.onload = () => loadNews();
 
         // 모달 관련 스크립트 (공통)
         function openModal() { document.getElementById('modal').style.display = 'flex'; }
