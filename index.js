@@ -60,8 +60,21 @@ app.get('/api/count', async (req, res) => {
   }
 });
 
+// 소식 목록 가져오기
+app.get('/api/news', async (req, res) => {
+  try {
+    const client = await db.connect();
+    const { rows } = await client.sql`SELECT * FROM news ORDER BY created_at DESC;`;
+    client.release();
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: '소식을 불러오지 못했습니다.' });
+  }
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`미래연대당 서버 가동 중!`));
 module.exports = app;
+
 
 
