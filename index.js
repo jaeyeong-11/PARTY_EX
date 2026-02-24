@@ -60,21 +60,34 @@ app.get('/api/count', async (req, res) => {
   }
 });
 
-// 소식 목록 가져오기
+// [수정] 카테고리별 소식 가져오기
 app.get('/api/news', async (req, res) => {
+  const category = req.query.category; // 사용자가 클릭한 탭의 카테고리 이름
   try {
     const client = await db.connect();
-    const { rows } = await client.sql`SELECT * FROM news ORDER BY created_at DESC;`;
+    let query = 'SELECT * FROM news';
+    let params = [];
+
+    // 만약 특정 카테고리가 선택되었다면 해당 것만 조회
+    if (category && category !== '전체') {
+      query += ' WHERE category = $1';
+      params.push(category);
+    }
+    
+    query += ' ORDER BY created_at DESC';
+    
+    const { rows } = await client.query(query, params);
     client.release();
     res.json(rows);
   } catch (err) {
-    res.status(500).json({ error: '소식을 불러오지 못했습니다.' });
+    res.status(500).json({ error: '데이터 로딩 실패' });
   }
 });
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`미래연대당 서버 가동 중!`));
 module.exports = app;
+
 
 
 
