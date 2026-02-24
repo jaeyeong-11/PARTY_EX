@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>정당소식 - 미래연대당</title>
     <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="icon" href="/favicon.png" type="image/png">
+    <link rel="icon" href="/favicon.png?v=1" type="image/png">
     <style>
+        /* --- [공통 스타일 시작] 메인 페이지와 100% 동일 --- */
         :root {
             --brand-blue: #007acc;
             --brand-navy: #1d458b;
@@ -14,58 +15,45 @@
             --border-light: #e1e1e1;
             --bg-light: #f8f9fa;
         }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background: #fff; color: var(--text-gray); }
 
-        body { font-family: 'Pretendard', sans-serif; margin: 0; background: #fff; color: var(--text-gray); scroll-behavior: smooth; }
-
-        /* 1. 상단 바 스타일 (index.html과 100% 동일) */
-        .main-header {
-            background-color: #fff;
-            border-bottom: 1px solid var(--border-light);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            height: 80px;
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-        }
-
-        .logo { font-size: 26px; font-weight: 800; cursor: pointer; display: flex; align-items: center; text-decoration: none; }
+        /* 상단 헤더 레이아웃 */
+        .main-header { background-color: #fff; border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: 1000; height: 80px; display: flex; align-items: center; }
+        .nav-container { width: 100%; max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+        
+        /* 로고 및 메뉴 링크 */
+        .logo { font-size: 26px; font-weight: 800; text-decoration: none; display: flex; align-items: center; }
         .logo-main { color: var(--brand-navy); }
         .logo-point { color: var(--brand-blue); }
-
         .nav-menu { display: flex; list-style: none; gap: 40px; margin: 0; padding: 0; }
         .nav-menu li a { text-decoration: none; color: var(--text-gray); font-weight: 700; font-size: 18px; transition: color 0.2s; }
         .nav-menu li a:hover { color: var(--brand-blue); }
 
-        /* 2. 소식 게시판 디자인 */
-        .container { max-width: 1100px; margin: 60px auto; padding: 0 20px; text-align: center; }
-        h1 { font-size: 32px; margin-bottom: 50px; }
+        /* 🚩 [추가됨] 전체메뉴(햄버거) 버튼 스타일 */
+        .nav-right { display: flex; align-items: center; }
+        .menu-toggle { background-color: var(--brand-blue); color: white; border: none; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; height: 80px; width: 90px; }
+        .menu-toggle span { font-size: 12px; font-weight: bold; margin-top: 5px; }
+        .hamburger { width: 25px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; }
+        .hamburger span { width: 100%; height: 2px; background-color: white; }
 
-        .tabs { display: flex; justify-content: space-around; border-bottom: 2px solid #eee; margin-bottom: 30px; }
-        .tab { padding: 15px 20px; cursor: pointer; font-weight: bold; color: #666; position: relative; }
-        .tab.active { color: var(--brand-blue); }
-        .tab.active::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 3px; background: var(--brand-blue); }
-
-        .news-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .news-table th { padding: 15px; border-top: 2px solid #333; border-bottom: 1px solid #ddd; background: #fcfcfc; font-size: 15px; }
-        .news-table td { padding: 15px; border-bottom: 1px solid #eee; font-size: 15px; color: #444; }
-        .cat-tag { color: var(--brand-blue); font-weight: bold; margin-right: 5px; }
-
-        /* 3. 당원가입 모달 (index.html과 동일) */
+        /* 당원가입 모달 */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 400px; text-align: left; }
         .modal-content input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
         .btn-submit { background: var(--brand-blue); color: white; border: none; padding: 20px; width: 100%; font-size: 20px; font-weight: bold; border-radius: 12px; cursor: pointer; }
+        /* --- [공통 스타일 끝] --- */
+
+        /* --- [소식 페이지 전용 스타일] --- */
+        .container { max-width: 1100px; margin: 60px auto; padding: 0 20px; text-align: center; }
+        h1 { font-size: 32px; margin-bottom: 50px; }
+        .tabs { display: flex; justify-content: space-around; border-bottom: 2px solid #eee; margin-bottom: 30px; }
+        .tab { padding: 15px 20px; cursor: pointer; font-weight: bold; color: #666; position: relative; }
+        .tab.active { color: var(--brand-blue); }
+        .tab.active::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 3px; background: var(--brand-blue); }
+        .news-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .news-table th { padding: 15px; border-top: 2px solid #333; border-bottom: 1px solid #ddd; background: #fcfcfc; font-size: 15px; }
+        .news-table td { padding: 15px; border-bottom: 1px solid #eee; font-size: 15px; color: #444; }
+        .cat-tag { color: var(--brand-blue); font-weight: bold; margin-right: 5px; }
     </style>
 </head>
 <body>
@@ -81,6 +69,12 @@
                 <li><a href="#" onclick="openModal()">당원가입</a></li>
                 <li><a href="/news.html" style="color: var(--brand-blue);">정당소식</a></li>
             </ul>
+            <div class="nav-right">
+                <button class="menu-toggle">
+                    <div class="hamburger"><span></span><span></span><span></span></div>
+                    <span>전체메뉴</span>
+                </button>
+            </div>
         </nav>
     </header>
 
@@ -118,39 +112,40 @@
     </div>
 
     <script>
-        // 뉴스 데이터 가져오기 (이전 코드와 동일)
+        // 뉴스 데이터 불러오기
         window.onload = async function() {
             try {
                 const res = await fetch('/api/news');
                 const data = await res.json();
                 const list = document.getElementById('newsList');
                 if (data.length === 0) {
-                    list.innerHTML = "<tr><td colspan='3'>등록된 소식이 없습니다.</td></tr>";
+                    list.innerHTML = "<tr><td colspan='3' style='padding: 30px;'>등록된 소식이 없습니다.</td></tr>";
                     return;
                 }
                 data.forEach((item, index) => {
                     const date = new Date(item.created_at).toLocaleDateString();
+                    // 번호는 전체 개수에서 줄어드는 식으로 표시 (최신순)
                     list.innerHTML += `<tr><td>${data.length - index}</td><td style="text-align:left;"><span class="cat-tag">[${item.category}]</span> ${item.title}</td><td>${date}</td></tr>`;
                 });
             } catch (e) { console.error(e); }
         };
 
-        // 모달 제어 및 가입 기능 (index.html에서 복사)
+        // 모달 관련 스크립트 (공통)
         function openModal() { document.getElementById('modal').style.display = 'flex'; }
         function closeModal() { document.getElementById('modal').style.display = 'none'; }
         
         async function validateAndSubmit() {
             const name = document.getElementById('userName').value.trim();
             const email = document.getElementById('userEmail').value.trim();
-            if(!name || !email) { alert("입력해주세요!"); return; }
+            if(!name || !email) { alert("이름과 이메일을 모두 입력해주세요!"); return; }
             try {
                 const res = await fetch('/api/join', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, email })
                 });
-                if(res.ok) { alert("당원이 되신 것을 환영합니다!"); closeModal(); }
-            } catch (e) { alert("서버 오류가 발생했습니다."); }
+                if(res.ok) { alert("감사합니다! 당원이 되신 것을 환영합니다."); closeModal(); }
+            } catch (e) { alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요."); }
         }
     </script>
 </body>
