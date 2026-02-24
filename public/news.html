@@ -1,38 +1,107 @@
-<div class="section">
-    <h1>소식</h1>
-    <div class="tabs">
-        <div class="tab active">논평·브리핑</div>
-        <div class="tab">보도자료</div>
-        <div class="tab">공지사항</div>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>소식 - 미래연대당</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand-blue: #007acc;
+            --brand-navy: #1d458b;
+            --bg-light: #f8f9fa;
+        }
+
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background: #white; color: #333; }
+
+        /* 1. 상단 바 (index.html과 동일하게) */
+        .main-header { height: 80px; border-bottom: 1px solid #e1e1e1; display: flex; align-items: center; justify-content: center; }
+        .nav-container { width: 100%; max-width: 1200px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 26px; font-weight: 800; text-decoration: none; }
+        .logo-main { color: var(--brand-navy); }
+        .logo-point { color: var(--brand-blue); }
+
+        /* 2. 소식 섹션 디자인 */
+        .container { max-width: 1100px; margin: 60px auto; padding: 0 20px; text-align: center; }
+        h1 { font-size: 32px; margin-bottom: 50px; }
+
+        /* 탭 메뉴 스타일 */
+        .tabs { display: flex; justify-content: space-around; border-bottom: 2px solid #eee; margin-bottom: 30px; }
+        .tab { padding: 15px 20px; cursor: pointer; font-weight: bold; color: #666; position: relative; }
+        .tab.active { color: var(--brand-blue); }
+        .tab.active::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 3px; background: var(--brand-blue); }
+
+        /* 게시판 테이블 스타일 */
+        .news-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .news-table th { padding: 15px; border-top: 2px solid #333; border-bottom: 1px solid #ddd; background: #fcfcfc; font-size: 15px; }
+        .news-table td { padding: 15px; border-bottom: 1px solid #eee; font-size: 15px; color: #444; }
+        .news-table tr:hover { background: #f9f9f9; } /* 마우스 올리면 색 변함 */
+        
+        .cat-tag { color: var(--brand-blue); font-weight: bold; margin-right: 5px; }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <nav class="nav-container">
+            <a href="/" class="logo">
+                <span class="logo-main">미래연대</span><span class="logo-point">당</span>
+            </a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>소식</h1>
+
+        <div class="tabs">
+            <div class="tab active">논평·브리핑</div>
+            <div class="tab">모두발언</div>
+            <div class="tab">보도자료</div>
+            <div class="tab">공지사항</div>
+        </div>
+
+        <table class="news-table">
+            <thead>
+                <tr>
+                    <th width="10%">번호</th>
+                    <th width="70%">제목</th>
+                    <th width="20%">작성일</th>
+                </tr>
+            </thead>
+            <tbody id="newsList">
+                </tbody>
+        </table>
     </div>
 
-    <table class="news-table">
-        <thead>
-            <tr>
-                <th>번호</th>
-                <th>제목</th>
-                <th>작성일</th>
-            </tr>
-        </thead>
-        <tbody id="newsList">
-            </tbody>
-    </table>
-</div>
+    <script>
+        // 페이지가 열리면 서버에서 데이터를 가져옵니다.
+        window.onload = async function() {
+            try {
+                const response = await fetch('/api/news');
+                const data = await response.json();
+                const list = document.getElementById('newsList');
 
-<script>
-    window.onload = async function() {
-        const res = await fetch('/api/news');
-        const data = await res.json();
-        const list = document.getElementById('newsList');
-        
-        data.forEach(item => {
-            const date = new Date(item.created_at).toLocaleDateString();
-            list.innerHTML += `
-                <tr>
-                    <td>${item.id}</td>
-                    <td style="text-align:left;">[${item.category}] ${item.title}</td>
-                    <td>${date}</td>
-                </tr>`;
-        });
-    }
-</script>
+                if (data.length === 0) {
+                    list.innerHTML = "<tr><td colspan='3'>등록된 소식이 없습니다.</td></tr>";
+                    return;
+                }
+
+                data.forEach((item, index) => {
+                    const date = new Date(item.created_at).toLocaleDateString();
+                    list.innerHTML += `
+                        <tr>
+                            <td>${data.length - index}</td>
+                            <td style="text-align:left;">
+                                <span class="cat-tag">[${item.category}]</span> ${item.title}
+                            </td>
+                            <td>${date}</td>
+                        </tr>
+                    `;
+                });
+            } catch (e) {
+                console.error("데이터 로딩 실패", e);
+            }
+        };
+    </script>
+</body>
+</html>
