@@ -1,0 +1,38 @@
+<div class="section">
+    <h1>소식</h1>
+    <div class="tabs">
+        <div class="tab active">논평·브리핑</div>
+        <div class="tab">보도자료</div>
+        <div class="tab">공지사항</div>
+    </div>
+
+    <table class="news-table">
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성일</th>
+            </tr>
+        </thead>
+        <tbody id="newsList">
+            </tbody>
+    </table>
+</div>
+
+<script>
+    window.onload = async function() {
+        const res = await fetch('/api/news');
+        const data = await res.json();
+        const list = document.getElementById('newsList');
+        
+        data.forEach(item => {
+            const date = new Date(item.created_at).toLocaleDateString();
+            list.innerHTML += `
+                <tr>
+                    <td>${item.id}</td>
+                    <td style="text-align:left;">[${item.category}] ${item.title}</td>
+                    <td>${date}</td>
+                </tr>`;
+        });
+    }
+</script>
