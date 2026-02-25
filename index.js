@@ -109,9 +109,28 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+// [추가] 뉴스 상세 내용 가져오기
+app.get('/api/news/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const client = await db.connect();
+    const { rows } = await client.sql`SELECT * FROM news WHERE id = ${id}`;
+    client.release();
+
+    if (rows.length > 0) {
+      res.json(rows[0]);
+    } else {
+      res.status(404).json({ error: '글을 찾을 수 없습니다.' });
+    }
+  } catch (err) {
+    res.status(500).json({ error: '서버 오류' });
+  }
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`미래연대당 서버 가동 중!`));
 module.exports = app;
+
 
 
 
