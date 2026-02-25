@@ -66,7 +66,7 @@
 </head>
 <body>
 
-    <header class="main-header">
+<header class="main-header">
         <nav class="nav-container">
             <a href="/" class="logo">
                 <span class="logo-main">미래연대</span><span class="logo-point">당</span>
@@ -82,7 +82,7 @@
                 <div class="auth-links">
                     <a href="#" onclick="openModal()">당원가입</a>
                     <span class="auth-divider">|</span>
-                    <a href="#" onclick="alert('로그인 기능은 준비 중입니다!')">로그인</a>
+                    <a href="#" onclick="openLoginModal()">로그인</a>
                 </div>
 
                 <button class="menu-toggle">
@@ -110,22 +110,11 @@
                     <th width="20%">작성일</th>
                 </tr>
             </thead>
-            <tbody id="newsList">
-                </tbody>
+            <tbody id="newsList"></tbody>
         </table>
     </div>
 
     <div class="modal" id="modal">
-        <div class="modal" id="loginModal">
-    <div class="modal-content">
-        <h3>당원 로그인</h3>
-        <p>미래연대당에 오신 것을 환영합니다.</p>
-        <input type="text" id="loginName" placeholder="이름을 입력하세요">
-        <input type="email" id="loginEmail" placeholder="이메일 주소를 입력하세요">
-        <button class="btn-submit" onclick="submitLogin()">로그인하기</button>
-        <p style="text-align: center; color: #888; font-size: 13px; cursor: pointer; margin-top: 15px;" onclick="closeLoginModal()">닫기</p>
-    </div>
-</div>
         <div class="modal-content">
             <h3>당원 가입 신청</h3>
             <p>미래연대당의 주인이 되어주세요.</p>
@@ -136,28 +125,34 @@
         </div>
     </div>
 
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <h3>당원 로그인</h3>
+            <p>미래연대당에 오신 것을 환영합니다.</p>
+            <input type="text" id="loginName" placeholder="이름을 입력하세요">
+            <input type="email" id="loginEmail" placeholder="이메일 주소를 입력하세요">
+            <button class="btn-submit" onclick="submitLogin()">로그인하기</button>
+            <p style="text-align: center; color: #888; font-size: 13px; cursor: pointer; margin-top: 15px;" onclick="closeLoginModal()">닫기</p>
+        </div>
+    </div>
+
     <script>
-        // 뉴스 로드 함수
+        /* --- 로직 제어 스크립트 --- */
+
+        // 뉴스 불러오기
         async function loadNews(category = '논평·브리핑') {
             try {
                 const res = await fetch(`/api/news?category=${encodeURIComponent(category)}`);
                 const data = await res.json();
                 const list = document.getElementById('newsList');
                 list.innerHTML = ""; 
-                
                 if (data.length === 0) {
                     list.innerHTML = "<tr><td colspan='3' style='padding:30px;'>등록된 소식이 없습니다.</td></tr>";
                     return;
                 }
-
                 data.forEach((item, index) => {
                     const date = new Date(item.created_at).toLocaleDateString();
-                    list.innerHTML += `
-                        <tr>
-                            <td>${data.length - index}</td>
-                            <td style="text-align:left;"><span class="cat-tag">[${item.category}]</span> ${item.title}</td>
-                            <td>${date}</td>
-                        </tr>`;
+                    list.innerHTML += `<tr><td>${data.length - index}</td><td style="text-align:left;"><span class="cat-tag">[${item.category}]</span> ${item.title}</td><td>${date}</td></tr>`;
                 });
             } catch (e) { console.error(e); }
         }
@@ -171,41 +166,36 @@
             });
         });
 
-        // 초기 로드
         window.onload = () => loadNews();
 
-        // 모달 기능 (중복 선언 정리됨)
-// 로그인 모달 제어
-function openLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
-function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
-
-// 로그인 제출 기능
-async function submitLogin() {
-    const name = document.getElementById('loginName').value.trim();
-    const email = document.getElementById('loginEmail').value.trim();
-
-    if(!name || !email) { alert("이름과 이메일을 입력해주세요!"); return; }
-
-    try {
-        const res = await fetch('/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email })
-        });
-        const data = await res.json();
-
-        if(res.ok) {
-            alert(`${name} 당원님, 환영합니다!`);
-            closeLoginModal();
-            // 💡 로그인 성공 시 '당원가입 | 로그인' 글자를 '로그아웃'으로 바꿀 수도 있습니다.
-        } else {
-            alert("등록된 당원 정보가 없습니다. 가입을 먼저 진행해주세요!");
-        }
-    } catch (e) {
-        alert("서버 연결 실패!");
-    }
-}
+        // 🚩 모달 제어 함수들 (분리 및 정리)
+        function openModal() { document.getElementById('modal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
         
+        function openLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
+        function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
+
+        // 로그인 통신
+        async function submitLogin() {
+            const name = document.getElementById('loginName').value.trim();
+            const email = document.getElementById('loginEmail').value.trim();
+            if(!name || !email) { alert("이름과 이메일을 입력해주세요!"); return; }
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email })
+                });
+                if(res.ok) {
+                    alert(`${name} 당원님, 환영합니다!`);
+                    closeLoginModal();
+                } else {
+                    alert("정보가 일치하지 않습니다.");
+                }
+            } catch (e) { alert("서버 연결 실패!"); }
+        }
+
+        // 가입 통신
         async function validateAndSubmit() {
             const name = document.getElementById('userName').value.trim();
             const email = document.getElementById('userEmail').value.trim();
@@ -216,7 +206,7 @@ async function submitLogin() {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, email })
                 });
-                if(res.ok) { alert("감사합니다! 당원이 되신 것을 환영합니다."); closeModal(); }
+                if(res.ok) { alert("당원이 되신 것을 환영합니다!"); closeModal(); }
             } catch (e) { alert("서버 오류가 발생했습니다."); }
         }
     </script>
