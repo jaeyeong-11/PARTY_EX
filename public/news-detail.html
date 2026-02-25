@@ -52,6 +52,17 @@
         .btn-area { display: flex; justify-content: flex-end; gap: 10px; }
         .btn-list { background: var(--brand-navy); color: white; padding: 12px 30px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 15px; border: none; cursor: pointer; }
         .btn-delete { background: #ff4d4d; color: white; padding: 12px 30px; border-radius: 4px; border: none; font-weight: bold; font-size: 15px; cursor: pointer; }
+        .btn-edit { 
+            background: var(--brand-blue); 
+            color: white; 
+            padding: 12px 30px; 
+            border-radius: 4px; 
+            border: none; 
+            font-weight: bold; 
+            font-size: 15px; 
+            cursor: pointer;
+        }
+        
     </style>
 </head>
 <body>
@@ -97,7 +108,7 @@
         </div>
     </div>
 
-    <script>
+<script>
         // 1. 게시물 상세 로드
         async function loadDetail() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -119,14 +130,30 @@
             }
         }
 
-        // 2. 게시물 삭제 기능
-        async function deleteNews() {
-            const pw = prompt("관리자 암호를 입력하세요.");
-            if (pw !== "1234") { 
-                alert("암호가 틀렸습니다.");
-                return;
-            }
+        // 2. 관리자 권한 체크 및 버튼 표시
+        function checkAdminPermission() {
+            const isAdmin = localStorage.getItem('isAdmin') === 'true'; 
+            const btnArea = document.getElementById('detailBtnArea');
 
+            if (isAdmin) {
+                // 관리자라면: 수정/삭제 버튼을 포함하여 다시 그립니다.
+                btnArea.innerHTML = `
+                    <button class="btn-edit" onclick="goToEdit()">수정</button>
+                    <button class="btn-delete" onclick="deleteNews()">삭제</button>
+                    <a href="/news.html" class="btn-list">목록</a>
+                `;
+            }
+        }
+
+        // 3. 수정 페이지 이동 함수
+        function goToEdit() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            location.href = `/news-edit.html?id=${id}`;
+        }
+
+        // 4. 게시물 삭제 기능 (프롬프트 제거 버전)
+        async function deleteNews() {
             if (!confirm("정말 이 게시물을 삭제하시겠습니까?")) return;
 
             const urlParams = new URLSearchParams(window.location.search);
@@ -141,7 +168,7 @@
             } catch (e) { alert("삭제 실패!"); }
         }
 
-        // 3. 상단 바 동기화
+        // 5. 상단 바 및 로그아웃 관련 함수 (기존과 동일)
         function updateHeaderUI() {
             const userName = localStorage.getItem('userName');
             const authArea = document.getElementById('authArea');
@@ -164,49 +191,17 @@
 
         function logout() { 
             if(confirm("로그아웃 하시겠습니까?")) {
-                localStorage.removeItem('userName'); 
+                localStorage.clear(); // 모든 정보 삭제
                 location.reload(); 
             }
         }
 
+        // 🚩 실행부: 모든 필요한 함수를 호출합니다.
         window.onload = function() {
             loadDetail();
             updateHeaderUI();
+            checkAdminPermission(); // 관리자 버튼 체크 추가
         };
-
-        // updateHeaderUI 함수나 별도 함수에서 처리
-function checkAdminPermission() {
-    const isAdmin = localStorage.getItem('isAdmin') === 'true'; // 저장된 값 확인
-    const btnArea = document.querySelector('.btn-area');
-
-    if (isAdmin) {
-        // 관리자라면: 수정/삭제 버튼을 보여줌
-        btnArea.innerHTML = `
-            <button class="btn-edit" onclick="goToEdit()">수정</button>
-            <button class="btn-delete" onclick="deleteNews()">삭제</button>
-            <a href="/news.html" class="btn-list">목록</a>
-        `;
-    } else {
-        // 일반 당원이라면: 목록 버튼만 보여줌
-        btnArea.innerHTML = `<a href="/news.html" class="btn-list">목록</a>`;
-    }
-}
-        
-// HTML 파일(index, news 등)의 submitLogin 함수 내부
-async function submitLogin() {
-    // ... (fetch 요청 코드) ...
-    if(res.ok) {
-        const data = await res.json();
-        
-        // 🚩 서버가 준 정보를 브라우저 메모리(localStorage)에 저장합니다.
-        localStorage.setItem('userName', data.userName);
-        localStorage.setItem('isAdmin', data.isAdmin); // true 또는 false가 저장됨
-        
-        alert(`${data.userName}님, 환영합니다!`);
-        location.reload(); // 페이지 새로고침해서 메뉴 바뀌게 함
-    }
-}
-        
     </script>
 </body>
 </html>
