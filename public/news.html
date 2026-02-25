@@ -175,8 +175,36 @@
         window.onload = () => loadNews();
 
         // 모달 기능 (중복 선언 정리됨)
-        function openModal() { document.getElementById('modal').style.display = 'flex'; }
-        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+// 로그인 모달 제어
+function openLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
+function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
+
+// 로그인 제출 기능
+async function submitLogin() {
+    const name = document.getElementById('loginName').value.trim();
+    const email = document.getElementById('loginEmail').value.trim();
+
+    if(!name || !email) { alert("이름과 이메일을 입력해주세요!"); return; }
+
+    try {
+        const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email })
+        });
+        const data = await res.json();
+
+        if(res.ok) {
+            alert(`${name} 당원님, 환영합니다!`);
+            closeLoginModal();
+            // 💡 로그인 성공 시 '당원가입 | 로그인' 글자를 '로그아웃'으로 바꿀 수도 있습니다.
+        } else {
+            alert("등록된 당원 정보가 없습니다. 가입을 먼저 진행해주세요!");
+        }
+    } catch (e) {
+        alert("서버 연결 실패!");
+    }
+}
         
         async function validateAndSubmit() {
             const name = document.getElementById('userName').value.trim();
