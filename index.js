@@ -45,11 +45,28 @@ app.post('/api/join', async (req, res) => {
   const { name, email } = req.body;
   try {
     const client = await db.connect();
-    await client.sql`INSERT INTO members (name, email) VALUES (${name}, ${email});`;
+
+    // 🚩 [수정] 1. 이미 가입된 이메일인지 먼저 조회해봅니다.
+    const existCheck = await client.sql`
+      SELECT * FROM members WHERE email = ${email} LIMIT 1;
+    `;
+
+    if (existCheck.rows.length > 0) {
+      // 이미 사람이 있다면 에러 메시지를 보냅니다.
+      client.release();
+      return res.status(400).json({ error: '이미 가입된 이메일입니다.' });
+    }
+
+    // 2. 없는 사람일 때만 가입을 진행합니다.
+    await client.sql`
+      INSERT INTO members (name, email) VALUES (${name}, ${email});
+    `;
+    
     client.release();
     res.status(200).json({ success: true });
   } catch (error) {
-    res.status(500).json({ error: '서버 오류' });
+    console.error('가입 에러:', error);
+    res.status(500).json({ error: '서버 오류가 발생했습니다.' });
   }
 });
 
@@ -146,6 +163,7 @@ app.delete('/api/news/:id', async (req, res) => {
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`🚀 미래연대당 서버 가동 중!`));
 module.exports = app;
+
 
 
 
