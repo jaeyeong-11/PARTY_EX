@@ -176,9 +176,37 @@ app.delete('/api/news/:id', async (req, res) => {
   } catch (err) { res.status(500).send(err); }
 });
 
+// [기능 7] 당원광장 (커뮤니티) API
+
+// 1. 글 목록 가져오기
+app.get('/api/community', async (req, res) => {
+  try {
+    const client = await db.connect();
+    // 최신 글이 위로 오게 정렬 (ORDER BY id DESC)
+    const { rows } = await client.sql`SELECT * FROM community ORDER BY id DESC LIMIT 50`;
+    client.release();
+    res.json(rows);
+  } catch (err) { res.status(500).json({ error: '글 불러오기 실패' }); }
+});
+
+// 2. 글 쓰기
+app.post('/api/community', async (req, res) => {
+  const { title, content, author } = req.body;
+  try {
+    const client = await db.connect();
+    await client.sql`
+      INSERT INTO community (title, content, author) 
+      VALUES (${title}, ${content}, ${author})
+    `;
+    client.release();
+    res.json({ success: true });
+  } catch (err) { res.status(500).json({ error: '글 저장 실패' }); }
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`🚀 미래연대당 서버 가동 중!`));
 module.exports = app;
+
 
 
 
