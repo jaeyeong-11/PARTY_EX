@@ -178,10 +178,18 @@ body {
                     list.innerHTML = "<tr><td colspan='3' style='padding:30px;'>등록된 소식이 없습니다.</td></tr>";
                     return;
                 }
-                data.forEach((item, index) => {
-                    const date = new Date(item.created_at).toLocaleDateString();
-                    list.innerHTML += `<tr><td>${data.length - index}</td><td style="text-align:left;"><span class="cat-tag">[${item.category}]</span> ${item.title}</td><td>${date}</td></tr>`;
-                });
+// [수정] loadNews 함수 내부의 list.innerHTML 부분
+data.forEach((item, index) => {
+    const date = new Date(item.created_at).toLocaleDateString();
+    list.innerHTML += `
+        <tr onclick="location.href='/news-detail.html?id=${item.id}'" style="cursor:pointer;">
+            <td>${data.length - index}</td>
+            <td style="text-align:left;">
+                <span class="cat-tag">[${item.category}]</span> ${item.title}
+            </td>
+            <td>${date}</td>
+        </tr>`;
+});
             } catch (e) { console.error(e); }
         }
 
