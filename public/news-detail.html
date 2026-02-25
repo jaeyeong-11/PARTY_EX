@@ -1,1 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>소식 상세 - 미래연대당</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="/favicon.png?v=1" type="image/png">
+    <style>
+        /* 🚩 1. 공통 스타일 (디자인 통일) */
+        :root {
+            --brand-blue: #007acc;
+            --brand-navy: #1d458b;
+            --text-gray: #333;
+            --border-light: #e1e1e1;
+        }
+        * { box-sizing: border-box; }
+        html { overflow-y: scroll; } /* 스크롤바 자리 고정 */
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background: #fff; color: var(--text-gray); }
 
+        /* 상단 헤더 레이아웃 */
+        .main-header { background-color: #fff; border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: 1000; height: 80px; display: flex; align-items: center; }
+        .nav-container { width: 100%; max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+        .logo { font-size: 26px; font-weight: 800; text-decoration: none; color: var(--brand-navy); }
+        .nav-menu { display: flex; list-style: none; gap: 40px; margin: 0; padding: 0; }
+        .nav-menu li a { text-decoration: none; color: var(--text-gray); font-weight: 700; font-size: 18px; }
+        .auth-links { display: flex; align-items: center; gap: 10px; margin-right: 20px; font-size: 14px; color: #666; }
+        .auth-links a { text-decoration: none; color: inherit; }
+        .auth-divider { color: #ddd; font-size: 12px; }
+        .menu-toggle { background-color: var(--brand-blue); color: white; border: none; height: 80px; width: 90px; cursor: pointer; }
+
+        /* 🚩 2. 상세 페이지 본문 디자인 */
+        .container { max-width: 1100px; margin: 60px auto; padding: 0 20px; }
+        
+        /* 제목 영역 */
+        .detail-header { border-top: 2px solid #333; border-bottom: 1px solid #eee; padding: 25px 0; margin-bottom: 40px; }
+        .detail-title { font-size: 24px; font-weight: 800; line-height: 1.4; margin-bottom: 15px; }
+        .detail-meta { display: flex; justify-content: flex-end; color: #888; font-size: 14px; }
+
+        /* 내용 영역 */
+        .detail-content { font-size: 17px; line-height: 1.8; color: #444; min-height: 400px; white-space: pre-wrap; margin-bottom: 60px; }
+        .content-sub-title { font-size: 22px; font-weight: 800; text-align: center; margin-bottom: 40px; display: block; }
+
+        /* 하단 서명 */
+        .detail-footer { border-top: 1px solid #eee; padding-top: 30px; text-align: left; margin-bottom: 40px; }
+        .footer-sign { font-weight: bold; font-size: 16px; line-height: 1.6; }
+
+        /* 목록 버튼 */
+        .btn-area { display: flex; justify-content: flex-end; }
+        .btn-list { background: var(--brand-navy); color: white; padding: 10px 25px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <nav class="nav-container">
+            <a href="/" class="logo">미래연대<span>당</span></a>
+            <ul class="nav-menu">
+                <li><a href="/#policy">핵심정책</a></li>
+                <li><a href="/#support">지지현황</a></li>
+                <li><a href="/news.html">정당소식</a></li>
+            </ul>
+            <div class="nav-right" style="display:flex; align-items:center;">
+                <div class="auth-links" id="authArea"></div>
+                <button class="menu-toggle">전체메뉴</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="detail-header">
+            <div class="detail-title" id="dispTitle">제목을 불러오고 있습니다...</div>
+            <div class="detail-meta">
+                작성일자 &nbsp; <span id="dispDate">0000. 00. 00. 00:00</span>
+            </div>
+        </div>
+
+        <div class="detail-content">
+            <strong class="content-sub-title" id="dispSubTitle"></strong>
+            <div id="dispBody">내용을 불러오고 있습니다.</div>
+        </div>
+
+        <div class="detail-footer">
+            <div class="footer-sign">
+                <span id="signDate">0000년 00월 00일</span><br>
+                <span id="signAuthor">미래연대당 대변인실</span>
+            </div>
+        </div>
+
+        <div class="btn-area">
+            <a href="/news.html" class="btn-list">목록</a>
+        </div>
+    </div>
+
+    <script>
+        // 1. URL에서 ID 가져와서 데이터 불러오기
+        async function loadDetail() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const newsId = urlParams.get('id');
+
+            try {
+                const res = await fetch(`/api/news/${newsId}`);
+                const data = await res.json();
+
+                // 화면에 데이터 채우기
+                document.getElementById('dispTitle').innerText = `[${data.category}] ${data.title}`;
+                document.getElementById('dispSubTitle').innerText = data.title; // 제목을 본문 강조용으로 재활용
+                document.getElementById('dispDate').innerText = new Date(data.created_at).toLocaleString();
+                document.getElementById('dispBody').innerText = data.content;
+                
+                // 서명 영역
+                document.getElementById('signDate').innerText = new Date(data.created_at).toLocaleDateString('ko-KR', {
+                    year: 'numeric', month: 'long', day: 'numeric'
+                });
+            } catch (e) {
+                console.error("데이터 로드 실패", e);
+                document.getElementById('dispBody').innerText = "삭제되었거나 존재하지 않는 게시물입니다.";
+            }
+        }
+
+        // 2. 상단 바 로그인 상태 체크
+        function updateHeaderUI() {
+            const userName = localStorage.getItem('userName');
+            const authArea = document.getElementById('authArea');
+            if (userName) {
+                authArea.innerHTML = `<a href="/mypage.html" style="font-weight:bold;">${userName} 당원님</a><span class="auth-divider">|</span><a href="#" onclick="logout()">로그아웃</a>`;
+            } else {
+                authArea.innerHTML = `<a href="#">당원가입</a><span class="auth-divider">|</span><a href="#">로그인</a>`;
+            }
+        }
+
+        function logout() { localStorage.removeItem('userName'); location.reload(); }
+
+        window.onload = function() {
+            loadDetail();
+            updateHeaderUI();
+        };
+    </script>
+</body>
+</html>
