@@ -109,11 +109,16 @@
             try {
                 const res = await fetch(`/api/news/${newsId}`);
                 if (!res.ok) throw new Error();
-                const data = await res.json();
-                document.getElementById('dispTitle').innerText = `[${data.category}] ${data.title}`;
-                document.getElementById('dispSubTitle').innerText = data.title;
-                document.getElementById('dispDate').innerText = new Date(data.created_at).toLocaleString('ko-KR');
-                document.getElementById('dispBody').innerText = data.content;
+const data = await res.json();
+
+    // 🚩 상단 헤더 제목 (카테고리 중복 방지)
+    document.getElementById('dispTitle').innerText = data.title; 
+    
+    // 🚩 본문 중앙 제목 (중복이 싫다면 이 줄을 주석처리하거나 삭제하세요)
+    // document.getElementById('dispSubTitle').innerText = data.title; 
+
+    document.getElementById('dispDate').innerText = new Date(data.created_at).toLocaleString();
+    document.getElementById('dispBody').innerText = data.content;
                 document.getElementById('signDate').innerText = new Date(data.created_at).toLocaleDateString('ko-KR', {
                     year: 'numeric', month: 'long', day: 'numeric'
                 });
