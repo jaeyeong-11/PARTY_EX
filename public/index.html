@@ -314,7 +314,32 @@ window.onload = async function() {
         function openModal() { document.getElementById('modal').style.display = 'flex'; }
         function closeModal() { document.getElementById('modal').style.display = 'none'; }
         // 스크립트 맨 아래에 이 한 줄만 추가해도 해결됩니다!
-function openJoinModal() { openModal(); }
+        function openJoinModal() { openModal(); }
+        /* 🚩 [추가] 로그인 관련 함수들 */
+function openLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
+function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
+
+async function submitLogin() {
+    const name = document.getElementById('loginName').value.trim();
+    const email = document.getElementById('loginEmail').value.trim();
+
+    if(!name || !email) { alert("이름과 이메일을 입력해주세요!"); return; }
+
+    try {
+        const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email })
+        });
+        if(res.ok) {
+            alert(`${name} 당원님, 환영합니다!`);
+            closeLoginModal();
+            // 💡 여기서 로그아웃 버튼으로 바꿔주는 기능을 넣으면 완벽합니다.
+        } else {
+            alert("정보가 일치하지 않습니다.");
+        }
+    } catch (e) { alert("서버 연결 실패!"); }
+}
     </script>
 </body>
 </html>
