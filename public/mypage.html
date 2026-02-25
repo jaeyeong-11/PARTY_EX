@@ -5,35 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>마이페이지 - 미래연대당</title>
     <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="/favicon.png?v=1" type="image/png">
     <style>
-    <style>
-/* 🚩 1. 픽셀 밀림 방지 (어떤 페이지든 똑같은 너비 유지) */
-html { 
-    overflow-y: scroll; 
-}
-* { 
-    box-sizing: border-box; 
-}
-
-/* 🚩 2. 통합된 상단 링크 스타일 */
-.auth-links {
-    display: flex;
-    align-items: center;
-    gap: 10px;        /* 간격을 10px로 통일 */
-    margin-right: 20px; /* 오른쪽 여백을 20px로 통일 */
-    font-size: 14px;  /* 글자 크기를 14px로 통일 */
-    color: #666;
-    white-space: nowrap;
-}
-
-/* 🚩 3. 배경색 통일 */
-body { 
-    font-family: 'Pretendard', sans-serif; 
-    margin: 0; 
-    background: #fff; /* 배경을 흰색으로 통일하거나 변수로 고정 */
-    color: var(--text-gray); 
-    scroll-behavior: smooth; 
-}
+        /* 🚩 1. 공통 및 픽셀 밀림 방지 설정 */
         :root {
             --brand-blue: #007acc;
             --brand-navy: #1d458b;
@@ -41,13 +15,13 @@ body {
             --border-light: #e1e1e1;
             --bg-light: #f8f9fa;
         }
+        * { box-sizing: border-box; }
+        html { overflow-y: scroll; } /* 스크롤바 자리 고정 */
         body { font-family: 'Pretendard', sans-serif; margin: 0; background: #fff; color: var(--text-gray); scroll-behavior: smooth; }
 
-        /* 상단 헤더 레이아웃 */
+        /* 🚩 2. 상단 헤더 레이아웃 (메인/뉴스 페이지와 동일) */
         .main-header { background-color: #fff; border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: 1000; height: 80px; display: flex; align-items: center; }
         .nav-container { width: 100%; max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
-        
-        /* 로고 및 메뉴 링크 */
         .logo { font-size: 26px; font-weight: 800; text-decoration: none; display: flex; align-items: center; }
         .logo-main { color: var(--brand-navy); }
         .logo-point { color: var(--brand-blue); }
@@ -60,8 +34,6 @@ body {
         .auth-links a { text-decoration: none; color: inherit; }
         .auth-links a:hover { color: var(--brand-blue); }
         .auth-divider { color: #ddd; font-size: 12px; }
-
-        /* 오른쪽 정렬 영역 */
         .nav-right { display: flex; align-items: center; }
 
         /* 전체메뉴 버튼 */
@@ -70,30 +42,32 @@ body {
         .hamburger { width: 25px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; }
         .hamburger span { width: 100%; height: 2px; background-color: white; }
 
-        /* 소식 페이지 레이아웃 */
-        .container { max-width: 1100px; margin: 60px auto; padding: 0 20px; text-align: center; }
-        h1 { font-size: 32px; margin-bottom: 50px; }
-        .tabs { display: flex; justify-content: space-around; border-bottom: 2px solid #eee; margin-bottom: 30px; }
-        .tab { padding: 15px 20px; cursor: pointer; font-weight: bold; color: #666; position: relative; }
-        .tab.active { color: var(--brand-blue); }
-        .tab.active::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 3px; background: var(--brand-blue); }
+        /* 🚩 3. 마이페이지 전용 레이아웃 */
+        .container { max-width: 1100px; margin: 60px auto; padding: 0 20px; display: grid; grid-template-columns: 350px 1fr; gap: 40px; }
 
-        /* 테이블 스타일 */
-        .news-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .news-table th { padding: 15px; border-top: 2px solid #333; border-bottom: 1px solid #ddd; background: #fcfcfc; font-size: 15px; }
-        .news-table td { padding: 15px; border-bottom: 1px solid #eee; font-size: 15px; color: #444; }
-        .cat-tag { color: var(--brand-blue); font-weight: bold; margin-right: 5px; }
+        /* 디지털 당원증 카드 */
+        .member-card { 
+            background: linear-gradient(135deg, var(--brand-navy), var(--brand-blue));
+            color: white; padding: 40px; border-radius: 24px; height: 500px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            box-shadow: 0 15px 30px rgba(0,122,204,0.2);
+        }
+        .card-top { font-size: 16px; font-weight: bold; opacity: 0.8; letter-spacing: 1px; }
+        .card-name { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+        .card-info { font-size: 15px; opacity: 0.7; }
 
-        /* 모달 스타일 */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 400px; text-align: left; }
-        .modal-content input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        .btn-submit { background: var(--brand-blue); color: white; border: none; padding: 20px; width: 100%; font-size: 20px; font-weight: bold; border-radius: 12px; cursor: pointer; }
+        /* 활동 내역 상자 */
+        .content-box { background: #fff; padding: 45px; border-radius: 24px; border: 1px solid #eee; text-align: left; }
+        .section-title { font-size: 24px; font-weight: bold; margin-bottom: 30px; border-left: 6px solid var(--brand-blue); padding-left: 18px; }
+        .activity-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .stat-item { padding: 25px; background: var(--bg-light); border-radius: 16px; text-align: center; }
+        .stat-label { font-size: 14px; color: #777; margin-bottom: 12px; }
+        .stat-value { font-size: 28px; font-weight: bold; color: var(--brand-navy); }
     </style>
 </head>
 <body>
 
-<header class="main-header">
+    <header class="main-header">
         <nav class="nav-container">
             <a href="/" class="logo">
                 <span class="logo-main">미래연대</span><span class="logo-point">당</span>
@@ -101,55 +75,18 @@ body {
             <ul class="nav-menu">
                 <li><a href="/#policy">핵심정책</a></li>
                 <li><a href="/#support">지지현황</a></li>
-                <li><a href="#" onclick="openModal()">당원가입</a></li>
-                <li><a href="/news.html" style="color: var(--brand-blue);">정당소식</a></li>
+                <li><a href="/news.html">정당소식</a></li>
             </ul>
 
             <div class="nav-right">
-               <div class="nav-right">
-    <div class="auth-links" id="authArea">
-        <a href="#" onclick="openModal()">당원가입</a>
-        <span class="auth-divider">|</span>
-        <a href="#" onclick="openLoginModal()">로그인</a>
-    </div>
+                <div class="auth-links" id="authArea"></div>
 
-    <button class="menu-toggle">
-        <div class="hamburger"><span></span><span></span><span></span></div>
-        <span>전체메뉴</span>
-    </button>
-</div>
+                <button class="menu-toggle">
+                    <div class="hamburger"><span></span><span></span><span></span></div>
+                    <span>전체메뉴</span>
+                </button>
+            </div>
         </nav>
-    </header>
-        /* 마이페이지 레이아웃 */
-        .container { max-width: 1000px; margin: 50px auto; padding: 0 20px; display: grid; grid-template-columns: 300px 1fr; gap: 30px; }
-
-        /* 1. 왼쪽: 디지털 당원증 카드 */
-        .member-card { 
-            background: linear-gradient(135deg, var(--brand-navy), var(--brand-blue));
-            color: white; padding: 30px; border-radius: 20px; height: 450px;
-            display: flex; flex-direction: column; justify-content: space-between;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        .card-top { font-size: 18px; font-weight: bold; opacity: 0.8; }
-        .card-middle { margin-top: auto; }
-        .card-name { font-size: 28px; font-weight: 800; margin-bottom: 5px; }
-        .card-info { font-size: 14px; opacity: 0.7; }
-
-        /* 2. 오른쪽: 활동 내역 섹션 */
-        .content-box { background: white; padding: 40px; border-radius: 20px; border: 1px solid #eee; }
-        .section-title { font-size: 22px; font-weight: bold; margin-bottom: 25px; border-left: 5px solid var(--brand-blue); padding-left: 15px; }
-        .activity-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .stat-item { padding: 20px; background: var(--bg-light); border-radius: 12px; text-align: center; }
-        .stat-label { font-size: 14px; color: #666; margin-bottom: 10px; }
-        .stat-value { font-size: 24px; font-weight: bold; color: var(--brand-navy); }
-    </style>
-</head>
-<body>
-
-    <header class="main-header">
-        <nav class="nav-container">
-            <a href="/" class="logo">미래연대<span>당</span></a>
-            <div id="authArea"></div> </nav>
     </header>
 
     <div class="container">
@@ -157,9 +94,9 @@ body {
             <div class="card-top">DIGITAL MEMBERSHIP</div>
             <div class="card-middle">
                 <div class="card-name" id="dispName">당원님</div>
-                <div class="card-info" id="dispEmail">loading...</div>
+                <div class="card-info" id="dispEmail">Future Solidarity Member</div>
             </div>
-            <div style="font-size: 12px; opacity: 0.5;">Future Solidarity Party</div>
+            <div style="font-size: 14px; opacity: 0.6; font-weight: bold;">미래연대당</div>
         </div>
 
         <div class="content-box">
@@ -175,22 +112,45 @@ body {
                 </div>
             </div>
 
-            <div class="section-title" style="margin-top: 40px;">정기 당비 납부 현황</div>
-            <p style="color: #666;">현재 <strong>정기 당원</strong> 상태입니다. (매월 10일 납부)</p>
+            <div class="section-title" style="margin-top: 50px;">당원 정보 관리</div>
+            <p style="color: #666; line-height: 1.6;">
+                현재 <strong>정기 당원</strong> 자격을 유지하고 계십니다.<br>
+                당원 정보 수정 및 당비 납부 내역 확인은 준비 중입니다.
+            </p>
         </div>
     </div>
 
     <script>
-        window.onload = function() {
+        // 1. 헤더 UI 업데이트 (다른 페이지와 동일)
+        function updateHeaderUI() {
             const userName = localStorage.getItem('userName');
-            if (!userName) {
+            const authArea = document.getElementById('authArea');
+            if (!authArea) return;
+
+            if (userName) {
+                authArea.innerHTML = `
+                    <a href="/mypage.html" style="color:var(--brand-navy); font-weight:bold; text-decoration:none;">${userName} 당원님</a>
+                    <span class="auth-divider">|</span>
+                    <a href="#" onclick="logout()">로그아웃</a>
+                `;
+                document.getElementById('dispName').innerText = userName + " 당원님";
+            } else {
+                // 로그인 안 된 상태면 메인으로 튕겨내기
                 alert("로그인이 필요한 페이지입니다.");
-                location.href = "/"; // 메인으로 튕겨내기
-                return;
+                location.href = "/";
             }
-            document.getElementById('dispName').innerText = userName + " 당원님";
-            // 여기에 나중에 이메일이나 당원번호도 localStorage에서 가져와 뿌릴 수 있습니다.
-        };
+        }
+
+        // 2. 로그아웃 기능
+        function logout() {
+            if(confirm("로그아웃 하시겠습니까?")) {
+                localStorage.removeItem('userName');
+                location.href = "/";
+            }
+        }
+
+        // 페이지 로드 시 실행
+        window.onload = updateHeaderUI;
     </script>
 </body>
 </html>
