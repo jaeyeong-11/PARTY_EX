@@ -2,46 +2,64 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>관리자 글쓰기 - 미래연대당</title>
+    <title>새 소식 작성 - 미래연대당</title>
     <style>
-        .write-container { max-width: 800px; margin: 50px auto; padding: 30px; border: 1px solid #ddd; border-radius: 10px; }
-        input, select, textarea { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 5px; }
-        textarea { height: 400px; resize: vertical; }
-        .btn-submit { background: #1d458b; color: white; border: none; padding: 15px 30px; font-weight: bold; cursor: pointer; width: 100%; }
+        .write-wrap { max-width: 900px; margin: 60px auto; padding: 40px; border: 1px solid #eee; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        h2 { color: #1d458b; margin-bottom: 30px; }
+        input, select, textarea { width: 100%; padding: 15px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
+        textarea { height: 400px; line-height: 1.6; }
+        .btn-post { background: #007acc; color: white; border: none; padding: 20px; width: 100%; font-size: 18px; font-weight: bold; border-radius: 12px; cursor: pointer; }
     </style>
 </head>
 <body>
-    <div class="write-container">
-        <h2>📰 새 소식 등록</h2>
+    <div class="write-wrap">
+        <h2>📰 미래연대당 새 소식 등록</h2>
+        
+        <input type="password" id="adminPw" placeholder="관리자 암호를 입력하세요">
+        <hr style="margin-bottom:30px; border:0; border-top:1px solid #eee;">
+
         <select id="category">
             <option>논평·브리핑</option>
             <option>모두발언</option>
             <option>보도자료</option>
             <option>공지사항</option>
         </select>
-        <input type="text" id="title" placeholder="제목을 입력하세요">
-        <textarea id="content" placeholder="내용을 입력하세요 (엔터키로 줄바꿈 가능)"></textarea>
-        <button class="btn-submit" onclick="submitNews()">게시하기</button>
+        <input type="text" id="title" placeholder="게시글 제목을 입력하세요">
+        <textarea id="content" placeholder="당원들에게 전할 상세 내용을 입력하세요. (이미지 주소를 넣으면 나중에 사진도 띄울 수 있어요!)"></textarea>
+        
+        <button class="btn-post" onclick="submitNews()">게시판에 등록하기</button>
     </div>
 
     <script>
         async function submitNews() {
-            const title = document.getElementById('title').value;
+            const pw = document.getElementById('adminPw').value;
+            const title = document.getElementById('title').value.trim();
             const category = document.getElementById('category').value;
-            const content = document.getElementById('content').value;
+            const content = document.getElementById('content').value.trim();
 
-            if(!title || !content) { alert("모든 항목을 채워주세요!"); return; }
-
-            const res = await fetch('/api/news', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title, category, content })
-            });
-
-            if(res.ok) {
-                alert("성공적으로 게시되었습니다!");
-                location.href = "/news.html"; // 목록으로 이동
+            // 🚩 간단한 비밀번호 체크 (예: 1234)
+            if(pw !== "1234") { 
+                alert("관리자 암호가 틀렸습니다!"); 
+                return; 
             }
+
+            if(!title || !content) { 
+                alert("제목과 내용을 모두 채워주세요."); 
+                return; 
+            }
+
+            try {
+                const res = await fetch('/api/news', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, category, content })
+                });
+
+                if(res.ok) {
+                    alert("성공적으로 등록되었습니다!");
+                    location.href = "/news.html";
+                }
+            } catch (e) { alert("서버 저장 실패!"); }
         }
     </script>
 </body>
