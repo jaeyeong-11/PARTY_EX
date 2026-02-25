@@ -2,20 +2,147 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>당원 게시판 - 미래연대당</title>
-    <script>
-        // 🚩 [보안] 주소창으로 몰래 들어오는 사람 쫓아내기
-        // 페이지가 열리자마자 검사합니다.
-        const user = localStorage.getItem('userName');
-        if (!user) {
-            alert("잘못된 접근입니다. 당원 로그인이 필요합니다.");
-            location.href = "/"; // 메인 페이지로 강제 추방
-        }
-    </script>
-    </head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>당원광장 - 미래연대당</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;700&display=swap" rel="stylesheet">
+    <script src="/common.js"></script>
+    <style>
+        :root { --brand-blue: #007acc; --brand-navy: #1d458b; --text-gray: #333; }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background: #f8f9fa; color: var(--text-gray); }
+
+        /* 헤더 스타일 (index.html과 동일) */
+        .main-header { background: #fff; border-bottom: 1px solid #e1e1e1; height: 80px; display: flex; align-items: center; justify-content: center; }
+        .nav-container { width: 100%; max-width: 1200px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: 800; text-decoration: none; color: var(--brand-navy); }
+
+        /* 게시판 컨테이너 */
+        .board-container { max-width: 900px; margin: 50px auto; padding: 20px; }
+        .board-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .board-title { font-size: 32px; font-weight: 800; color: var(--brand-navy); }
+        .btn-write { background: var(--brand-blue); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-write:hover { background: var(--brand-navy); }
+
+        /* 게시글 리스트 스타일 */
+        .post-list { list-style: none; padding: 0; margin: 0; }
+        .post-item { background: white; border: 1px solid #e1e1e1; border-radius: 12px; padding: 25px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); transition: 0.2s; }
+        .post-item:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        
+        .post-top { display: flex; justify-content: space-between; font-size: 14px; color: #888; margin-bottom: 10px; }
+        .post-author { font-weight: bold; color: var(--brand-navy); }
+        .post-title { font-size: 20px; font-weight: bold; margin: 0 0 10px 0; color: #333; }
+        .post-content { font-size: 16px; color: #555; line-height: 1.6; white-space: pre-wrap; }
+
+        /* 글쓰기 모달 */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 500px; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .input-group input, .input-group textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        .input-group textarea { height: 150px; resize: vertical; }
+        .btn-submit { width: 100%; padding: 15px; background: var(--brand-navy); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
 <body>
-    <h1>🎉 환영합니다! 여기는 당원 전용 게시판입니다.</h1>
-    <p>오직 인증된 당원들만 볼 수 있는 비밀스러운 공간이죠.</p>
-    <a href="/">메인으로 돌아가기</a>
+
+    <header class="main-header">
+        <div class="nav-container">
+            <a href="/" class="logo">미래연대당 당원광장</a>
+            <a href="/" style="text-decoration:none; color:#666; font-weight:bold;">🏠 메인으로</a>
+        </div>
+    </header>
+
+    <div class="board-container">
+        <div class="board-header">
+            <div class="board-title">🗣️ 자유게시판</div>
+            <button class="btn-write" onclick="openWriteModal()">✏️ 글쓰기</button>
+        </div>
+
+        <ul class="post-list" id="postList">
+            <li style="text-align:center; padding:40px; color:#888;">게시글을 불러오는 중입니다...</li>
+        </ul>
+    </div>
+
+    <div class="modal" id="writeModal">
+        <div class="modal-content">
+            <h3 style="margin-top:0;">새로운 글 작성</h3>
+            <div class="input-group">
+                <label>제목</label>
+                <input type="text" id="postTitle" placeholder="제목을 입력하세요">
+            </div>
+            <div class="input-group">
+                <label>내용</label>
+                <textarea id="postContent" placeholder="당원들과 나누고 싶은 이야기를 적어주세요"></textarea>
+            </div>
+            <button class="btn-submit" onclick="submitPost()">등록하기</button>
+            <p onclick="closeWriteModal()" style="text-align:center; cursor:pointer; color:#888; margin-top:15px;">닫기</p>
+        </div>
+    </div>
+
+    <script>
+        // 0. 보안 검문 (당원 아니면 쫓아냄)
+        const currentUser = localStorage.getItem('userName');
+        if (!currentUser) {
+            alert("당원 전용 공간입니다.");
+            location.href = "/";
+        }
+
+        // 1. 글 목록 불러오기
+        async function loadPosts() {
+            try {
+                const res = await fetch('/api/community');
+                const posts = await res.json();
+                const list = document.getElementById('postList');
+                
+                if (posts.length === 0) {
+                    list.innerHTML = `<li style="text-align:center; padding:50px; color:#888;">아직 작성된 글이 없습니다.<br>첫 번째 글의 주인공이 되어보세요!</li>`;
+                    return;
+                }
+
+                list.innerHTML = posts.map(post => `
+                    <li class="post-item">
+                        <div class="post-top">
+                            <span class="post-author">${post.author} 당원</span>
+                            <span>${new Date(post.created_at).toLocaleDateString()}</span>
+                        </div>
+                        <h3 class="post-title">${post.title}</h3>
+                        <div class="post-content">${post.content}</div>
+                    </li>
+                `).join('');
+            } catch (e) { console.error(e); }
+        }
+
+        // 2. 글 작성하기
+        async function submitPost() {
+            const title = document.getElementById('postTitle').value;
+            const content = document.getElementById('postContent').value;
+
+            if (!title || !content) { alert("제목과 내용을 모두 입력해주세요."); return; }
+
+            try {
+                const res = await fetch('/api/community', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        title, 
+                        content, 
+                        author: currentUser // 로컬스토리지에 있는 내 이름으로 작성
+                    })
+                });
+
+                if (res.ok) {
+                    alert("글이 등록되었습니다!");
+                    closeWriteModal();
+                    loadPosts(); // 목록 새로고침
+                } else { alert("등록 실패"); }
+            } catch (e) { alert("서버 오류"); }
+        }
+
+        // 모달 제어
+        function openWriteModal() { document.getElementById('writeModal').style.display = 'flex'; }
+        function closeWriteModal() { document.getElementById('writeModal').style.display = 'none'; }
+
+        // 시작 시 실행
+        loadPosts();
+    </script>
 </body>
 </html>
