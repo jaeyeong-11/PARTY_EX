@@ -7,7 +7,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;700&display=swap" rel="stylesheet">
     <link rel="icon" href="/favicon.png?v=1" type="image/png">
     <style>
+/* 🚩 1. 픽셀 밀림 방지 (어떤 페이지든 똑같은 너비 유지) */
+html { 
+    overflow-y: scroll; 
+}
+* { 
+    box-sizing: border-box; 
+}
 
+/* 🚩 2. 통합된 상단 링크 스타일 */
+.auth-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;        /* 간격을 10px로 통일 */
+    margin-right: 20px; /* 오른쪽 여백을 20px로 통일 */
+    font-size: 14px;  /* 글자 크기를 14px로 통일 */
+    color: #666;
+    white-space: nowrap;
+}
+
+/* 🚩 3. 배경색 통일 */
+body { 
+    font-family: 'Pretendard', sans-serif; 
+    margin: 0; 
+    background: #fff; /* 배경을 흰색으로 통일하거나 변수로 고정 */
+    color: var(--text-gray); 
+    scroll-behavior: smooth; 
+}
         :root {
             --brand-blue: #007acc;
             --brand-navy: #1d458b;
