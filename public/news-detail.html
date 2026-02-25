@@ -7,48 +7,70 @@
     <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;700&display=swap" rel="stylesheet">
     <link rel="icon" href="/favicon.png?v=1" type="image/png">
     <style>
-        :root {
+   /* 🚩 1. 픽셀 밀림 방지 (어떤 페이지든 똑같은 너비 유지) */
+html { 
+    overflow-y: scroll; 
+}
+* { 
+    box-sizing: border-box; 
+}
+
+/* 🚩 2. 통합된 상단 링크 스타일 */
+.auth-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;        /* 간격을 10px로 통일 */
+    margin-right: 20px; /* 오른쪽 여백을 20px로 통일 */
+    font-size: 14px;  /* 글자 크기를 14px로 통일 */
+    color: #666;
+    white-space: nowrap;
+}
+
+/* 🚩 3. 배경색 통일 */
+body { 
+    font-family: 'Pretendard', sans-serif; 
+    margin: 0; 
+    background: #fff; /* 배경을 흰색으로 통일하거나 변수로 고정 */
+    color: var(--text-gray); 
+    scroll-behavior: smooth; 
+}
+
+         :root {
             --brand-blue: #007acc;
             --brand-navy: #1d458b;
             --text-gray: #333;
             --border-light: #e1e1e1;
             --bg-light: #f8f9fa;
         }
-        * { box-sizing: border-box; }
-        html { overflow-y: scroll; } 
         body { font-family: 'Pretendard', sans-serif; margin: 0; background: #fff; color: var(--text-gray); scroll-behavior: smooth; }
 
-        /* 🚩 상단 헤더 레이아웃 */
+        /* 상단 헤더 레이아웃 */
         .main-header { background-color: #fff; border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: 1000; height: 80px; display: flex; align-items: center; }
         .nav-container { width: 100%; max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
         
+        /* 로고 및 메뉴 링크 */
         .logo { font-size: 26px; font-weight: 800; text-decoration: none; display: flex; align-items: center; }
         .logo-main { color: var(--brand-navy); }
         .logo-point { color: var(--brand-blue); }
-
         .nav-menu { display: flex; list-style: none; gap: 40px; margin: 0; padding: 0; }
         .nav-menu li a { text-decoration: none; color: var(--text-gray); font-weight: 700; font-size: 18px; transition: color 0.2s; }
         .nav-menu li a:hover { color: var(--brand-blue); }
 
-        .nav-right { display: flex; align-items: center; }
+        /* 로그인/가입 링크 스타일 */
         .auth-links { display: flex; align-items: center; gap: 10px; margin-right: 20px; font-size: 14px; color: #666; white-space: nowrap; }
         .auth-links a { text-decoration: none; color: inherit; }
+        .auth-links a:hover { color: var(--brand-blue); }
         .auth-divider { color: #ddd; font-size: 12px; }
 
-        /* 🚩 햄버거 버튼 수리 완료 */
-        .menu-toggle { background-color: var(--brand-blue); color: white; border: none; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; height: 80px; width: 90px; padding: 0; flex-shrink: 0; }
-        .menu-toggle span:last-child { font-size: 12px; font-weight: bold; margin-top: 5px; }
-        .hamburger { width: 25px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 2px; }
-        .hamburger span { display: block; width: 100%; height: 2px; background-color: white; border-radius: 1px; }
+        /* 오른쪽 정렬 영역 */
+        .nav-right { display: flex; align-items: center; }
 
-        /* 상세 페이지 디자인 */
-        .container { max-width: 1000px; margin: 60px auto; padding: 0 20px; }
-        .detail-header { border-top: 2px solid #333; border-bottom: 1px solid #eee; padding: 30px 0; margin-bottom: 40px; text-align: left; }
-        .detail-title { font-size: 26px; font-weight: 800; line-height: 1.4; margin-bottom: 15px; }
-        .detail-meta { display: flex; justify-content: flex-end; color: #888; font-size: 14px; }
-        .detail-content { font-size: 17px; line-height: 1.9; color: #444; min-height: 400px; white-space: pre-wrap; margin-bottom: 60px; text-align: left; }
-        .detail-footer { border-top: 1px solid #eee; padding-top: 30px; text-align: left; margin-bottom: 40px; }
-        .footer-sign { font-weight: bold; font-size: 16px; line-height: 1.8; color: #222; }
+        /* 전체메뉴 버튼 */
+        .menu-toggle { background-color: var(--brand-blue); color: white; border: none; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; height: 80px; width: 90px; }
+        .menu-toggle span { font-size: 12px; font-weight: bold; margin-top: 5px; }
+        .hamburger { width: 25px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; }
+        .hamburger span { width: 100%; height: 2px; background-color: white; }
+
 
         /* 하단 버튼 영역 */
         .btn-area { display: flex; justify-content: flex-end; gap: 10px; }
