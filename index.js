@@ -90,6 +90,7 @@ app.post('/api/login', async (req, res) => {
   const { name, email } = req.body;
   try {
     const client = await db.connect();
+    // 🔍 DB에서 해당 사용자를 찾습니다.
     const { rows } = await client.sql`
       SELECT * FROM members WHERE name = ${name} AND email = ${email} LIMIT 1;
     `;
@@ -97,17 +98,14 @@ app.post('/api/login', async (req, res) => {
 
     if (rows.length > 0) {
       const user = rows[0];
-      // 🚩 특정 이메일을 관리자로 지정 (문자열 비교 오타 수정)
-      const adminEmail = 'ddanzi@minjoo.kr';
-      const isAdmin = (user.email === adminEmail); 
-
+      // 🚩 핵심: DB의 is_admin 컬럼 값을 그대로 보냅니다!
       res.status(200).json({ 
         success: true, 
         userName: user.name, 
-        isAdmin: isAdmin 
+        isAdmin: user.is_admin // SQL에서 설정한 true/false 값
       });
     } else {
-      res.status(404).json({ error: '회원을 찾을 수 없습니다.' });
+      res.status(404).json({ error: '회원 정보를 찾을 수 없습니다.' });
     }
   } catch (err) {
     res.status(500).json({ error: '서버 오류' });
@@ -148,6 +146,7 @@ app.delete('/api/news/:id', async (req, res) => {
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`🚀 미래연대당 서버 가동 중!`));
 module.exports = app;
+
 
 
 
