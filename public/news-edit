@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>소식 수정 - 미래연대당</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --brand-blue: #007acc; --brand-navy: #1d458b; }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background: #f8f9fa; }
+        .write-wrap { max-width: 900px; margin: 60px auto; padding: 40px; background: #fff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        input, select, textarea { width: 100%; padding: 15px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
+        textarea { height: 400px; line-height: 1.6; }
+        .btn-update { background: var(--brand-blue); color: white; border: none; padding: 20px; width: 100%; font-size: 18px; font-weight: bold; border-radius: 12px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="write-wrap">
+        <h2 style="color:var(--brand-navy)">📝 소식 수정하기</h2>
+        <select id="category">
+            <option>논평·브리핑</option><option>모두발언</option><option>보도자료</option><option>공지사항</option>
+        </select>
+        <input type="text" id="title" placeholder="제목">
+        <textarea id="content" placeholder="내용"></textarea>
+        <button class="btn-update" onclick="updateNews()">수정 완료</button>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const newsId = urlParams.get('id');
+
+        // 1. 기존 내용 불러와서 채우기
+        window.onload = async () => {
+            const res = await fetch(`/api/news/${newsId}`);
+            const data = await res.json();
+            document.getElementById('title').value = data.title;
+            document.getElementById('category').value = data.category;
+            document.getElementById('content').value = data.content;
+        };
+
+        // 2. 수정된 내용 서버로 보내기
+        async function updateNews() {
+            const title = document.getElementById('title').value;
+            const category = document.getElementById('category').value;
+            const content = document.getElementById('content').value;
+
+            const res = await fetch(`/api/news/${newsId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, category, content })
+            });
+
+            if (res.ok) {
+                alert("수정되었습니다.");
+                location.href = `/news-detail.html?id=${newsId}`;
+            }
+        }
+    </script>
+</body>
+</html>
