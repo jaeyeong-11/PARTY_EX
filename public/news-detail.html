@@ -161,6 +161,30 @@ const data = await res.json();
             loadDetail();
             updateHeaderUI();
         };
+
+        <div class="btn-area">
+    <button onclick="deleteNews()" style="background:#ff4d4d; color:white; padding:10px 25px; border:none; border-radius:4px; cursor:pointer; font-weight:bold; margin-right:10px;">삭제</button>
+    <a href="/news.html" class="btn-list">목록</a>
+</div>
+
+async function deleteNews() {
+    const pw = prompt("관리자 암호를 입력하세요.");
+    if (pw !== "1234") { // 설정하신 암호
+        alert("암호가 틀렸습니다.");
+        return;
+    }
+
+    if (!confirm("정말 이 게시물을 삭제하시겠습니까?")) return;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+
+    const res = await fetch(`/api/news/${id}`, { method: 'DELETE' });
+    if (res.ok) {
+        alert("삭제되었습니다.");
+        location.href = "/news.html";
+    }
+}
     </script>
 </body>
 </html>
