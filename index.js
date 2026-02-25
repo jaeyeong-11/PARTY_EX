@@ -167,9 +167,18 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+// submitLogin 함수 내부 수정
+if(res.ok) {
+    const data = await res.json();
+    localStorage.setItem('userName', data.userName);
+    localStorage.setItem('isAdmin', data.isAdmin); // 🚩 관리자 여부 저장
+    location.reload();
+}
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`미래연대당 서버 가동 중!`));
 module.exports = app;
+
 
 
 
