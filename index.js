@@ -1,24 +1,36 @@
 const express = require('express');
 const path = require('path');
-const { db } = require('@vercel/postgres'); // Neon DB와 연결하는 도구
+const { db } = require('@vercel/postgres'); 
 const app = express();
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// [기능 1] 장부 표(members)가 없으면 자동으로 만들기
+// [기능 1] DB 초기화: is_admin 컬럼이 없다면 추가해두는 것이 좋습니다.
 async function initDB() {
   try {
     const client = await db.connect();
+    // 회원 테이블 생성
     await client.sql`
       CREATE TABLE IF NOT EXISTS members (
         id SERIAL PRIMARY KEY,
         name TEXT NOT NULL,
         email TEXT NOT NULL,
+        is_admin BOOLEAN DEFAULT false, 
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `;
-    console.log("✅ Neon 장부 준비 완료!");
+    // 뉴스 테이블 생성
+    await client.sql`
+      CREATE TABLE IF NOT EXISTS news (
+        id SERIAL PRIMARY KEY,
+        title TEXT NOT NULL,
+        category TEXT NOT NULL,
+        content TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `;
+    console.log("✅ Neon DB 및 테이블 준비 완료!");
     client.release();
   } catch (err) {
     console.error('DB 연결 에러:', err);
@@ -26,57 +38,46 @@ async function initDB() {
 }
 initDB();
 
-// [기능 2] 당원 가입 데이터 저장하기
+// --- API 영역 ---
+
+// [기능 2] 당원 가입
 app.post('/api/join', async (req, res) => {
   const { name, email } = req.body;
   try {
     const client = await db.connect();
-    // 실제 Neon 데이터베이스에 저장하는 명령
-    await client.sql`
-      INSERT INTO members (name, email)
-      VALUES (${name}, ${email});
-    `;
+    await client.sql`INSERT INTO members (name, email) VALUES (${name}, ${email});`;
     client.release();
     res.status(200).json({ success: true });
   } catch (error) {
-    console.error('저장 중 에러 발생:', error);
     res.status(500).json({ error: '서버 오류' });
   }
 });
 
-// [추가] 현재 당원이 몇 명인지 세어서 알려주는 주소
+// [기능 3] 당원 수 세기
 app.get('/api/count', async (req, res) => {
   try {
     const client = await db.connect();
-    // members 테이블의 전체 행 개수를 셉니다.
     const { rows } = await client.sql`SELECT COUNT(*) FROM members;`;
     client.release();
-    
-    // { count: 5 } 이런 식으로 결과를 보내줍니다.
     res.json({ count: rows[0].count });
   } catch (error) {
-    console.error('숫자 세기 에러:', error);
-    res.status(500).json({ error: '데이터를 가져올 수 없습니다.' });
+    res.status(500).json({ error: '데이터 로딩 실패' });
   }
 });
 
-// [수정] 카테고리별 소식 가져오기
+// [기능 4] 뉴스 목록 가져오기
 app.get('/api/news', async (req, res) => {
-  const category = req.query.category; // 사용자가 클릭한 탭의 카테고리 이름
+  const category = req.query.category;
   try {
     const client = await db.connect();
-    let query = 'SELECT * FROM news';
-    let params = [];
-
-    // 만약 특정 카테고리가 선택되었다면 해당 것만 조회
-    if (category && category !== '전체') {
-      query += ' WHERE category = $1';
-      params.push(category);
+    let rows;
+    if (category && category !== '전체' && category !== '논평·브리핑') {
+        const result = await client.query('SELECT * FROM news WHERE category = $1 ORDER BY created_at DESC', [category]);
+        rows = result.rows;
+    } else {
+        const result = await client.query('SELECT * FROM news ORDER BY created_at DESC');
+        rows = result.rows;
     }
-    
-    query += ' ORDER BY created_at DESC';
-    
-    const { rows } = await client.query(query, params);
     client.release();
     res.json(rows);
   } catch (err) {
@@ -84,24 +85,28 @@ app.get('/api/news', async (req, res) => {
   }
 });
 
-// [추가] 로그인 확인 API
+// [기능 5] 로그인 및 관리자 확인 (통합 및 수정)
 app.post('/api/login', async (req, res) => {
   const { name, email } = req.body;
   try {
     const client = await db.connect();
-    // 🔍 장부(members)에서 이름과 이메일이 일치하는 사람이 있는지 찾습니다.
     const { rows } = await client.sql`
-      SELECT * FROM members 
-      WHERE name = ${name} AND email = ${email}
-      LIMIT 1;
+      SELECT * FROM members WHERE name = ${name} AND email = ${email} LIMIT 1;
     `;
     client.release();
 
     if (rows.length > 0) {
-      // 당원이 맞음!
-      res.status(200).json({ success: true, user: rows[0] });
+      const user = rows[0];
+      // 🚩 특정 이메일을 관리자로 지정 (문자열 비교 오타 수정)
+      const adminEmail = 'ddanzi@minjoo.kr';
+      const isAdmin = (user.email === adminEmail); 
+
+      res.status(200).json({ 
+        success: true, 
+        userName: user.name, 
+        isAdmin: isAdmin 
+      });
     } else {
-      // 당원이 아님
       res.status(404).json({ error: '회원을 찾을 수 없습니다.' });
     }
   } catch (err) {
@@ -109,41 +114,25 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// [추가] 뉴스 상세 내용 가져오기
+// [기능 6] 뉴스 상세 및 등록/삭제
 app.get('/api/news/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const client = await db.connect();
     const { rows } = await client.sql`SELECT * FROM news WHERE id = ${id}`;
     client.release();
-
-    if (rows.length > 0) {
-      res.json(rows[0]);
-    } else {
-      res.status(404).json({ error: '글을 찾을 수 없습니다.' });
-    }
-  } catch (err) {
-    res.status(500).json({ error: '서버 오류' });
-  }
+    rows.length > 0 ? res.json(rows[0]) : res.status(404).send('Not Found');
+  } catch (err) { res.status(500).send(err); }
 });
 
-// [index.js에 추가] 새로운 소식 저장하기
 app.post('/api/news', async (req, res) => {
-  const { title, category, content } = req.body; // 제목, 카테고리, 내용을 받음
-
+  const { title, category, content } = req.body;
   try {
     const client = await db.connect();
-    // 🚩 DB의 news 테이블에 새 데이터를 집어넣습니다.
-    await client.sql`
-      INSERT INTO news (title, category, content, created_at)
-      VALUES (${title}, ${category}, ${content}, NOW());
-    `;
+    await client.sql`INSERT INTO news (title, category, content, created_at) VALUES (${title}, ${category}, ${content}, NOW());`;
     client.release();
-    res.status(200).json({ success: true });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'DB 저장 실패' });
-  }
+    res.json({ success: true });
+  } catch (err) { res.status(500).send(err); }
 });
 
 app.delete('/api/news/:id', async (req, res) => {
@@ -156,28 +145,10 @@ app.delete('/api/news/:id', async (req, res) => {
   } catch (err) { res.status(500).send(err); }
 });
 
-app.post('/api/login', async (req, res) => {
-  const { name, email } = req.body;
-  // ... DB 조회 코드 생략 ...
-  if (rows.length > 0) {
-    const user = 'ddanzi@minjoo.kr';
-    // 🚩 특정 이메일(예: admin@future.com)을 관리자로 지정합니다.
-    const isAdmin = (user.email === 'ddanzi@minjoo.kr'); 
-    res.status(200).json({ success: true, userName: user.name, isAdmin: isAdmin });
-  }
-});
-
-// submitLogin 함수 내부 수정
-if(res.ok) {
-    const data = await res.json();
-    localStorage.setItem('userName', data.userName);
-    localStorage.setItem('isAdmin', data.isAdmin); // 🚩 관리자 여부 저장
-    location.reload();
-}
-
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`미래연대당 서버 가동 중!`));
+app.listen(port, () => console.log(`🚀 미래연대당 서버 가동 중!`));
 module.exports = app;
+
 
 
 
