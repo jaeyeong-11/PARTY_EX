@@ -137,12 +137,15 @@
             const authArea = document.getElementById('authArea');
             if (!authArea) return;
 
-            if (userName) {
-                authArea.innerHTML = `
-                    <a href="/mypage.html" style="color:var(--brand-navy); font-weight:bold; text-decoration:none;">${userName} 당원님</a>
-                    <span class="auth-divider">|</span>
-                    <a href="#" onclick="logout()">로그아웃</a>
-                `;
+if (userName) {
+    authArea.innerHTML = `
+        <a href="/mypage.html" style="color:var(--brand-navy); font-weight:bold; text-decoration:none; margin-right:5px;">
+            ${userName} 당원님
+        </a>
+        <span class="auth-divider">|</span>
+        <a href="#" onclick="logout()">로그아웃</a>
+    `;
+}
             } else {
                 authArea.innerHTML = `
                     <a href="#" onclick="alert('가입은 메인페이지에서 가능합니다.')">당원가입</a>
