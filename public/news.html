@@ -243,15 +243,19 @@ function updateHeaderUI() {
     const userName = localStorage.getItem('userName');
     const authArea = document.getElementById('authArea');
 
+    if (!authArea) return; // authArea가 없는 경우 오류 방지
+
     if (userName) {
-        // 로그인 상태: 마이페이지 | 로그아웃 표시
+        // ✅ 로그인 상태: 이름을 클릭하면 마이페이지(/mypage.html)로 이동하게 만듭니다.
         authArea.innerHTML = `
-            <span style="color:var(--brand-navy); font-weight:bold;">${userName} 당원님</span>
+            <a href="/mypage.html" style="color:var(--brand-navy); font-weight:bold; text-decoration:none; margin-right:5px;">
+                ${userName} 당원님
+            </a>
             <span class="auth-divider">|</span>
             <a href="#" onclick="logout()">로그아웃</a>
         `;
     } else {
-        // 로그아웃 상태: 당원가입 | 로그인 표시
+        // ❌ 로그아웃 상태: 기존처럼 당원가입과 로그인 버튼을 보여줍니다.
         authArea.innerHTML = `
             <a href="#" onclick="openModal()">당원가입</a>
             <span class="auth-divider">|</span>
