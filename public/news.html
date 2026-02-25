@@ -54,6 +54,20 @@
         .news-table th { padding: 15px; border-top: 2px solid #333; border-bottom: 1px solid #ddd; background: #fcfcfc; font-size: 15px; }
         .news-table td { padding: 15px; border-bottom: 1px solid #eee; font-size: 15px; color: #444; }
         .cat-tag { color: var(--brand-blue); font-weight: bold; margin-right: 5px; }
+
+        /* [여기 추가] 상단 오른쪽 링크 스타일 */
+.auth-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 20px;
+    font-size: 14px;
+    color: #666;
+    white-space: nowrap;
+}
+.auth-links a { text-decoration: none; color: inherit; }
+.auth-links a:hover { color: var(--brand-blue); }
+.auth-divider { color: #ddd; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -69,7 +83,19 @@
                 <li><a href="#" onclick="openModal()">당원가입</a></li>
                 <li><a href="/news.html" style="color: var(--brand-blue);">정당소식</a></li>
             </ul>
-            <div class="nav-right">
+           <div class="nav-right">
+    
+    <div class="auth-links">
+        <a href="#" onclick="openModal()">당원가입</a>
+        <span class="auth-divider">|</span>
+        <a href="#" onclick="alert('로그인 기능은 준비 중입니다!')">로그인</a>
+    </div>
+
+    <button class="menu-toggle">
+        <div class="hamburger"><span></span><span></span><span></span></div>
+        <span>전체메뉴</span>
+    </button>
+</div>
                 <button class="menu-toggle">
                     <div class="hamburger"><span></span><span></span><span></span></div>
                     <span>전체메뉴</span>
@@ -171,6 +197,15 @@ window.onload = () => loadNews();
                 if(res.ok) { alert("감사합니다! 당원이 되신 것을 환영합니다."); closeModal(); }
             } catch (e) { alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요."); }
         }
+
+        // 스크립트 영역 아무 곳에나 있으면 됩니다.
+function openModal() { 
+    document.getElementById('modal').style.display = 'flex'; 
+}
+
+function closeModal() { 
+    document.getElementById('modal').style.display = 'none'; 
+}
     </script>
 </body>
 </html>
