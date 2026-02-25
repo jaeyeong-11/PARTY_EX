@@ -264,6 +264,29 @@ const res = await fetch('/api/join', {
     }
 }
 
+        async function submitLogin() {
+    const name = document.getElementById('loginName').value; // 실제 input ID에 맞게 수정
+    const email = document.getElementById('loginEmail').value;
+
+    const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email })
+    });
+
+    if (res.ok) {
+        const data = await res.json();
+        
+        // 🚩 [필수] 이 두 줄이 있어야 상세페이지에서 null이 안 뜹니다!
+        localStorage.setItem('userName', data.userName);
+        localStorage.setItem('isAdmin', data.isAdmin); // 서버가 준 true/false 저장
+        
+        alert(data.userName + " 관리자님, 환영합니다!");
+        location.reload(); 
+    } else {
+        alert("정보를 다시 확인해주세요.");
+    }
+}
         // 3. 지지하기 & 꽃가루
         function supportAction() {
             count++;
