@@ -127,9 +127,29 @@ app.get('/api/news/:id', async (req, res) => {
   }
 });
 
+// [index.js에 추가] 새로운 소식 저장하기
+app.post('/api/news', async (req, res) => {
+  const { title, category, content } = req.body; // 제목, 카테고리, 내용을 받음
+
+  try {
+    const client = await db.connect();
+    // 🚩 DB의 news 테이블에 새 데이터를 집어넣습니다.
+    await client.sql`
+      INSERT INTO news (title, category, content, created_at)
+      VALUES (${title}, ${category}, ${content}, NOW());
+    `;
+    client.release();
+    res.status(200).json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'DB 저장 실패' });
+  }
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`미래연대당 서버 가동 중!`));
 module.exports = app;
+
 
 
 
