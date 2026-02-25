@@ -14,13 +14,13 @@
             --border-light: #e1e1e1;
             --bg-light: #f8f9fa;
         }
-        * { box-sizing: border-box; }
-        html { overflow-y: scroll; } 
         body { font-family: 'Pretendard', sans-serif; margin: 0; background: #fff; color: var(--text-gray); scroll-behavior: smooth; }
 
-        /* 상단 헤더 (전체 페이지 공통) */
+        /* 상단 헤더 레이아웃 */
         .main-header { background-color: #fff; border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: 1000; height: 80px; display: flex; align-items: center; }
         .nav-container { width: 100%; max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+        
+        /* 로고 및 메뉴 링크 */
         .logo { font-size: 26px; font-weight: 800; text-decoration: none; display: flex; align-items: center; }
         .logo-main { color: var(--brand-navy); }
         .logo-point { color: var(--brand-blue); }
@@ -28,41 +28,69 @@
         .nav-menu li a { text-decoration: none; color: var(--text-gray); font-weight: 700; font-size: 18px; transition: color 0.2s; }
         .nav-menu li a:hover { color: var(--brand-blue); }
 
+        /* 로그인/가입 링크 스타일 */
         .auth-links { display: flex; align-items: center; gap: 10px; margin-right: 20px; font-size: 14px; color: #666; white-space: nowrap; }
-        .auth-links a { text-decoration: none; color: inherit; transition: color 0.2s; }
+        .auth-links a { text-decoration: none; color: inherit; }
         .auth-links a:hover { color: var(--brand-blue); }
         .auth-divider { color: #ddd; font-size: 12px; }
 
-        /* 상세 페이지 디자인 */
-        .container { max-width: 1100px; margin: 60px auto; padding: 0 20px; }
-        .detail-header { border-top: 2px solid #333; border-bottom: 1px solid #eee; padding: 30px 0; margin-bottom: 40px; }
-        .detail-title { font-size: 26px; font-weight: 800; line-height: 1.4; margin-bottom: 15px; text-align: left; }
-        .detail-meta { display: flex; justify-content: flex-end; color: #888; font-size: 14px; }
-        .detail-content { font-size: 17px; line-height: 1.9; color: #444; min-height: 400px; white-space: pre-wrap; margin-bottom: 60px; text-align: left; }
-        .detail-footer { border-top: 1px solid #eee; padding-top: 30px; text-align: left; margin-bottom: 40px; }
-        .footer-sign { font-weight: bold; font-size: 16px; line-height: 1.8; color: #222; }
+        /* 오른쪽 정렬 영역 */
+        .nav-right { display: flex; align-items: center; }
 
-        /* 하단 버튼 영역 */
-        .btn-area { display: flex; justify-content: flex-end; gap: 10px; }
-        .btn-list { background: var(--brand-navy); color: white; padding: 12px 30px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 15px; border: none; cursor: pointer; }
-        .btn-delete { background: #ff4d4d; color: white; padding: 12px 30px; border-radius: 4px; border: none; font-weight: bold; font-size: 15px; cursor: pointer; }
-        .btn-edit { background: var(--brand-blue); color: white; padding: 12px 30px; border-radius: 4px; border: none; font-weight: bold; font-size: 15px; cursor: pointer; }
+        /* 전체메뉴 버튼 */
+        .menu-toggle { background-color: var(--brand-blue); color: white; border: none; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; height: 80px; width: 90px; }
+        .menu-toggle span { font-size: 12px; font-weight: bold; margin-top: 5px; }
+        .hamburger { width: 25px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; }
+        .hamburger span { width: 100%; height: 2px; background-color: white; }
+
+        /* 소식 페이지 레이아웃 */
+        .container { max-width: 1100px; margin: 60px auto; padding: 0 20px; text-align: center; }
+        h1 { font-size: 32px; margin-bottom: 50px; }
+        .tabs { display: flex; justify-content: space-around; border-bottom: 2px solid #eee; margin-bottom: 30px; }
+        .tab { padding: 15px 20px; cursor: pointer; font-weight: bold; color: #666; position: relative; }
+        .tab.active { color: var(--brand-blue); }
+        .tab.active::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 3px; background: var(--brand-blue); }
+
+        /* 테이블 스타일 */
+        .news-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .news-table th { padding: 15px; border-top: 2px solid #333; border-bottom: 1px solid #ddd; background: #fcfcfc; font-size: 15px; }
+        .news-table td { padding: 15px; border-bottom: 1px solid #eee; font-size: 15px; color: #444; }
+        .cat-tag { color: var(--brand-blue); font-weight: bold; margin-right: 5px; }
+
+        /* 모달 스타일 */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 400px; text-align: left; }
+        .modal-content input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .btn-submit { background: var(--brand-blue); color: white; border: none; padding: 20px; width: 100%; font-size: 20px; font-weight: bold; border-radius: 12px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <header class="main-header">
+<header class="main-header">
         <nav class="nav-container">
-            <a href="/" class="logo"><span class="logo-main">미래연대</span><span class="logo-point">당</span></a>
+            <a href="/" class="logo">
+                <span class="logo-main">미래연대</span><span class="logo-point">당</span>
+            </a>
             <ul class="nav-menu">
                 <li><a href="/#policy">핵심정책</a></li>
                 <li><a href="/#support">지지현황</a></li>
-                <li><a href="/news.html">정당소식</a></li>
+                <li><a href="#" onclick="openModal()">당원가입</a></li>
+                <li><a href="/news.html" style="color: var(--brand-blue);">정당소식</a></li>
             </ul>
+
             <div class="nav-right">
-                <div class="auth-links" id="authArea"></div>
-                <button class="menu-toggle">전체메뉴</button>
-            </div>
+               <div class="nav-right">
+    <div class="auth-links" id="authArea">
+        <a href="#" onclick="openModal()">당원가입</a>
+        <span class="auth-divider">|</span>
+        <a href="#" onclick="openLoginModal()">로그인</a>
+    </div>
+
+    <button class="menu-toggle">
+        <div class="hamburger"><span></span><span></span><span></span></div>
+        <span>전체메뉴</span>
+    </button>
+</div>
         </nav>
     </header>
 
