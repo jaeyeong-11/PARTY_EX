@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지 - 미래연대당</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand-blue: #007acc;
+            --brand-navy: #1d458b;
+            --bg-light: #f8f9fa;
+        }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background: var(--bg-light); color: #333; }
+        html { overflow-y: scroll; }
+
+        /* 상단 헤더 (기존과 동일) */
+        .main-header { background-color: #fff; border-bottom: 1px solid #e1e1e1; height: 80px; display: flex; align-items: center; }
+        .nav-container { width: 100%; max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+        .logo { font-size: 26px; font-weight: 800; text-decoration: none; color: var(--brand-navy); }
+
+        /* 마이페이지 레이아웃 */
+        .container { max-width: 1000px; margin: 50px auto; padding: 0 20px; display: grid; grid-template-columns: 300px 1fr; gap: 30px; }
+
+        /* 1. 왼쪽: 디지털 당원증 카드 */
+        .member-card { 
+            background: linear-gradient(135deg, var(--brand-navy), var(--brand-blue));
+            color: white; padding: 30px; border-radius: 20px; height: 450px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .card-top { font-size: 18px; font-weight: bold; opacity: 0.8; }
+        .card-middle { margin-top: auto; }
+        .card-name { font-size: 28px; font-weight: 800; margin-bottom: 5px; }
+        .card-info { font-size: 14px; opacity: 0.7; }
+
+        /* 2. 오른쪽: 활동 내역 섹션 */
+        .content-box { background: white; padding: 40px; border-radius: 20px; border: 1px solid #eee; }
+        .section-title { font-size: 22px; font-weight: bold; margin-bottom: 25px; border-left: 5px solid var(--brand-blue); padding-left: 15px; }
+        .activity-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .stat-item { padding: 20px; background: var(--bg-light); border-radius: 12px; text-align: center; }
+        .stat-label { font-size: 14px; color: #666; margin-bottom: 10px; }
+        .stat-value { font-size: 24px; font-weight: bold; color: var(--brand-navy); }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <nav class="nav-container">
+            <a href="/" class="logo">미래연대<span>당</span></a>
+            <div id="authArea"></div> </nav>
+    </header>
+
+    <div class="container">
+        <div class="member-card">
+            <div class="card-top">DIGITAL MEMBERSHIP</div>
+            <div class="card-middle">
+                <div class="card-name" id="dispName">당원님</div>
+                <div class="card-info" id="dispEmail">loading...</div>
+            </div>
+            <div style="font-size: 12px; opacity: 0.5;">Future Solidarity Party</div>
+        </div>
+
+        <div class="content-box">
+            <div class="section-title">나의 활동 지수</div>
+            <div class="activity-grid">
+                <div class="stat-item">
+                    <div class="stat-label">참여한 정책 투표</div>
+                    <div class="stat-value">12건</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">작성한 제안글</div>
+                    <div class="stat-value">3건</div>
+                </div>
+            </div>
+
+            <div class="section-title" style="margin-top: 40px;">정기 당비 납부 현황</div>
+            <p style="color: #666;">현재 <strong>정기 당원</strong> 상태입니다. (매월 10일 납부)</p>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const userName = localStorage.getItem('userName');
+            if (!userName) {
+                alert("로그인이 필요한 페이지입니다.");
+                location.href = "/"; // 메인으로 튕겨내기
+                return;
+            }
+            document.getElementById('dispName').innerText = userName + " 당원님";
+            // 여기에 나중에 이메일이나 당원번호도 localStorage에서 가져와 뿌릴 수 있습니다.
+        };
+    </script>
+</body>
+</html>
