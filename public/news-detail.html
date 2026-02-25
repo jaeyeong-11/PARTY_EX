@@ -18,7 +18,7 @@
         html { overflow-y: scroll; } 
         body { font-family: 'Pretendard', sans-serif; margin: 0; background: #fff; color: var(--text-gray); scroll-behavior: smooth; }
 
-        /* 상단 헤더 */
+        /* 상단 헤더 (전체 페이지 공통) */
         .main-header { background-color: #fff; border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: 1000; height: 80px; display: flex; align-items: center; }
         .nav-container { width: 100%; max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
         .logo { font-size: 26px; font-weight: 800; text-decoration: none; display: flex; align-items: center; }
@@ -32,12 +32,6 @@
         .auth-links a { text-decoration: none; color: inherit; transition: color 0.2s; }
         .auth-links a:hover { color: var(--brand-blue); }
         .auth-divider { color: #ddd; font-size: 12px; }
-        .nav-right { display: flex; align-items: center; }
-
-        .menu-toggle { background-color: var(--brand-blue); color: white; border: none; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; height: 80px; width: 90px; }
-        .menu-toggle span { font-size: 12px; font-weight: bold; margin-top: 5px; }
-        .hamburger { width: 25px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; }
-        .hamburger span { width: 100%; height: 2px; background-color: white; }
 
         /* 상세 페이지 디자인 */
         .container { max-width: 1100px; margin: 60px auto; padding: 0 20px; }
@@ -52,26 +46,14 @@
         .btn-area { display: flex; justify-content: flex-end; gap: 10px; }
         .btn-list { background: var(--brand-navy); color: white; padding: 12px 30px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 15px; border: none; cursor: pointer; }
         .btn-delete { background: #ff4d4d; color: white; padding: 12px 30px; border-radius: 4px; border: none; font-weight: bold; font-size: 15px; cursor: pointer; }
-        .btn-edit { 
-            background: var(--brand-blue); 
-            color: white; 
-            padding: 12px 30px; 
-            border-radius: 4px; 
-            border: none; 
-            font-weight: bold; 
-            font-size: 15px; 
-            cursor: pointer;
-        }
-        
+        .btn-edit { background: var(--brand-blue); color: white; padding: 12px 30px; border-radius: 4px; border: none; font-weight: bold; font-size: 15px; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <header class="main-header">
         <nav class="nav-container">
-            <a href="/" class="logo">
-                <span class="logo-main">미래연대</span><span class="logo-point">당</span>
-            </a>
+            <a href="/" class="logo"><span class="logo-main">미래연대</span><span class="logo-point">당</span></a>
             <ul class="nav-menu">
                 <li><a href="/#policy">핵심정책</a></li>
                 <li><a href="/#support">지지현황</a></li>
@@ -79,10 +61,7 @@
             </ul>
             <div class="nav-right">
                 <div class="auth-links" id="authArea"></div>
-                <button class="menu-toggle">
-                    <div class="hamburger"><span></span><span></span><span></span></div>
-                    <span>전체메뉴</span>
-                </button>
+                <button class="menu-toggle">전체메뉴</button>
             </div>
         </nav>
     </header>
@@ -102,73 +81,58 @@
             </div>
         </div>
 
-        <div class="btn-area">
-            <button class="btn-delete" onclick="deleteNews()">삭제</button>
+        <div class="btn-area" id="adminBtnArea">
             <a href="/news.html" class="btn-list">목록</a>
         </div>
     </div>
 
-<script>
-        // 1. 게시물 상세 로드
+    <script>
+        // 1. 게시물 데이터 불러오기
         async function loadDetail() {
             const urlParams = new URLSearchParams(window.location.search);
             const newsId = urlParams.get('id');
-            if (!newsId) { alert("잘못된 접근입니다."); location.href = "/news.html"; return; }
+            if (!newsId) { location.href = "/news.html"; return; }
+            
             try {
                 const res = await fetch(`/api/news/${newsId}`);
-                if (!res.ok) throw new Error();
                 const data = await res.json();
-
                 document.getElementById('dispTitle').innerText = data.title;
                 document.getElementById('dispDate').innerText = new Date(data.created_at).toLocaleString();
                 document.getElementById('dispBody').innerText = data.content;
                 document.getElementById('signDate').innerText = new Date(data.created_at).toLocaleDateString('ko-KR', {
                     year: 'numeric', month: 'long', day: 'numeric'
                 });
-            } catch (e) {
-                document.getElementById('dispBody').innerText = "게시물을 찾을 수 없습니다.";
-            }
+            } catch (e) { document.getElementById('dispBody').innerText = "오류 발생"; }
         }
 
-        // 2. 관리자 권한 체크 및 버튼 표시
+        // 2. 관리자 권한 체크 및 버튼 렌더링
         function checkAdminPermission() {
             const isAdmin = localStorage.getItem('isAdmin') === 'true'; 
-            const btnArea = document.getElementById('detailBtnArea');
+            const btnArea = document.getElementById('adminBtnArea');
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
 
             if (isAdmin) {
-                // 관리자라면: 수정/삭제 버튼을 포함하여 다시 그립니다.
+                // 관리자라면 수정/삭제 버튼 추가
                 btnArea.innerHTML = `
-                    <button class="btn-edit" onclick="goToEdit()">수정</button>
+                    <button class="btn-edit" onclick="location.href='/news-edit.html?id=${id}'">수정</button>
                     <button class="btn-delete" onclick="deleteNews()">삭제</button>
                     <a href="/news.html" class="btn-list">목록</a>
                 `;
             }
         }
 
-        // 3. 수정 페이지 이동 함수
-        function goToEdit() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const id = urlParams.get('id');
-            location.href = `/news-edit.html?id=${id}`;
-        }
-
-        // 4. 게시물 삭제 기능 (프롬프트 제거 버전)
+        // 3. 게시물 삭제 기능 (비밀번호 프롬프트 제거)
         async function deleteNews() {
             if (!confirm("정말 이 게시물을 삭제하시겠습니까?")) return;
-
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
 
-            try {
-                const res = await fetch(`/api/news/${id}`, { method: 'DELETE' });
-                if (res.ok) {
-                    alert("삭제되었습니다.");
-                    location.href = "/news.html";
-                }
-            } catch (e) { alert("삭제 실패!"); }
+            const res = await fetch(`/api/news/${id}`, { method: 'DELETE' });
+            if (res.ok) { alert("삭제되었습니다."); location.href = "/news.html"; }
         }
 
-        // 5. 상단 바 및 로그아웃 관련 함수 (기존과 동일)
+        // 4. 상단 바 업데이트
         function updateHeaderUI() {
             const userName = localStorage.getItem('userName');
             const authArea = document.getElementById('authArea');
@@ -176,31 +140,21 @@
 
             if (userName) {
                 authArea.innerHTML = `
-                    <a href="/mypage.html" style="color:var(--brand-navy); font-weight:bold; text-decoration:none; margin-right:5px;">${userName} 당원님</a>
+                    <a href="/mypage.html" style="color:var(--brand-navy); font-weight:bold;">${userName} 당원님</a>
                     <span class="auth-divider">|</span>
                     <a href="#" onclick="logout()">로그아웃</a>
                 `;
             } else {
-                authArea.innerHTML = `
-                    <a href="/" onclick="alert('메인페이지로 이동합니다.')">당원가입</a>
-                    <span class="auth-divider">|</span>
-                    <a href="/" onclick="alert('메인페이지로 이동합니다.')">로그인</a>
-                `;
+                authArea.innerHTML = `<a href="/">당원가입</a> | <a href="/">로그인</a>`;
             }
         }
 
-        function logout() { 
-            if(confirm("로그아웃 하시겠습니까?")) {
-                localStorage.clear(); // 모든 정보 삭제
-                location.reload(); 
-            }
-        }
+        function logout() { localStorage.clear(); location.reload(); }
 
-        // 🚩 실행부: 모든 필요한 함수를 호출합니다.
         window.onload = function() {
             loadDetail();
             updateHeaderUI();
-            checkAdminPermission(); // 관리자 버튼 체크 추가
+            checkAdminPermission(); // 🚩 잊지 말고 실행!
         };
     </script>
 </body>
