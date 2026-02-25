@@ -15,84 +15,38 @@ html {
 * { 
     box-sizing: border-box; /* 테두리와 패딩이 너비를 침범하지 않게 함 */
 }
-        :root {
-            --brand-blue: #007acc; 
-            --brand-navy: #1d458b; 
+         :root {
+            --brand-blue: #007acc;
+            --brand-navy: #1d458b;
             --text-gray: #333;
             --border-light: #e1e1e1;
             --bg-light: #f8f9fa;
         }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background: #fff; color: var(--text-gray); scroll-behavior: smooth; }
 
-        body { font-family: 'Pretendard', sans-serif; margin: 0; background: var(--bg-light); color: var(--text-gray); scroll-behavior: smooth; }
-
-        /* 1. 상단 바 스타일 */
-        .main-header {
-            background-color: #fff;
-            border-bottom: 1px solid var(--border-light);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            height: 80px;
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-        }
-
-        .logo { font-size: 26px; font-weight: 800; cursor: pointer; display: flex; align-items: center; text-decoration: none; }
+        /* 상단 헤더 레이아웃 */
+        .main-header { background-color: #fff; border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: 1000; height: 80px; display: flex; align-items: center; }
+        .nav-container { width: 100%; max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+        
+        /* 로고 및 메뉴 링크 */
+        .logo { font-size: 26px; font-weight: 800; text-decoration: none; display: flex; align-items: center; }
         .logo-main { color: var(--brand-navy); }
         .logo-point { color: var(--brand-blue); }
-
         .nav-menu { display: flex; list-style: none; gap: 40px; margin: 0; padding: 0; }
         .nav-menu li a { text-decoration: none; color: var(--text-gray); font-weight: 700; font-size: 18px; transition: color 0.2s; }
         .nav-menu li a:hover { color: var(--brand-blue); }
 
-       /* 상단 오른쪽 링크 스타일 */
-.auth-links {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-right: 15px;
-        font-size: 13px; /* 조금 더 세련되게 크기 조절 */
-        color: #666;
-        white-space: nowrap; /* 글자가 밑으로 떨어지지 않게 */
-    }
+        /* 로그인/가입 링크 스타일 */
+        .auth-links { display: flex; align-items: center; gap: 10px; margin-right: 20px; font-size: 14px; color: #666; white-space: nowrap; }
+        .auth-links a { text-decoration: none; color: inherit; }
+        .auth-links a:hover { color: var(--brand-blue); }
+        .auth-divider { color: #ddd; font-size: 12px; }
 
-.auth-links a {
-    text-decoration: none;
-    color: inherit;
-    transition: color 0.2s;
-}
+        /* 오른쪽 정렬 영역 */
+        .nav-right { display: flex; align-items: center; }
 
-.auth-links a:hover {
-    color: var(--brand-blue);
-}
-
-.auth-divider {
-    color: #ddd;
-    font-size: 12px;
-}
-
-/* nav-right 내부 정렬 수정 */
-.nav-right {
-    display: flex;
-    align-items: center;
-}
-
-        /* 전체메뉴 버튼 컬러: 파랑 */
-        .menu-toggle {
-            background-color: var(--brand-blue); color: white; border: none;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer; height: 80px; width: 90px;
-        }
+        /* 전체메뉴 버튼 */
+        .menu-toggle { background-color: var(--brand-blue); color: white; border: none; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; height: 80px; width: 90px; }
         .menu-toggle span { font-size: 12px; font-weight: bold; margin-top: 5px; }
         .hamburger { width: 25px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; }
         .hamburger span { width: 100%; height: 2px; background-color: white; }
