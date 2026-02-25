@@ -6,151 +6,90 @@
     <title>미래연대당 - 새로운 연대로 만드는 미래</title>
     <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <link rel="icon" href="/favicon.png?v=1" type="image/png">
     <style>
-   /* 🚩 1. 픽셀 밀림 방지 (어떤 페이지든 똑같은 너비 유지) */
-html { 
-    overflow-y: scroll; 
-}
-* { 
-    box-sizing: border-box; 
-}
-
-/* 🚩 2. 통합된 상단 링크 스타일 */
-.auth-links {
-    display: flex;
-    align-items: center;
-    gap: 10px;        /* 간격을 10px로 통일 */
-    margin-right: 20px; /* 오른쪽 여백을 20px로 통일 */
-    font-size: 14px;  /* 글자 크기를 14px로 통일 */
-    color: #666;
-    white-space: nowrap;
-}
-
-/* 🚩 3. 배경색 통일 */
-body { 
-    font-family: 'Pretendard', sans-serif; 
-    margin: 0; 
-    background: #fff; /* 배경을 흰색으로 통일하거나 변수로 고정 */
-    color: var(--text-gray); 
-    scroll-behavior: smooth; 
-}
-
-         :root {
+        :root {
             --brand-blue: #007acc;
             --brand-navy: #1d458b;
             --text-gray: #333;
             --border-light: #e1e1e1;
             --bg-light: #f8f9fa;
         }
+
+        /* 🚩 1. 픽셀 밀림 방지 및 기본 설정 */
+        html { overflow-y: scroll; }
+        * { box-sizing: border-box; }
         body { font-family: 'Pretendard', sans-serif; margin: 0; background: #fff; color: var(--text-gray); scroll-behavior: smooth; }
 
-        /* 상단 헤더 레이아웃 */
+        /* 🚩 2. 상단 헤더 (index.html 원본 디자인 복구) */
         .main-header { background-color: #fff; border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: 1000; height: 80px; display: flex; align-items: center; }
         .nav-container { width: 100%; max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
         
-        /* 로고 및 메뉴 링크 */
         .logo { font-size: 26px; font-weight: 800; text-decoration: none; display: flex; align-items: center; }
         .logo-main { color: var(--brand-navy); }
         .logo-point { color: var(--brand-blue); }
+
         .nav-menu { display: flex; list-style: none; gap: 40px; margin: 0; padding: 0; }
         .nav-menu li a { text-decoration: none; color: var(--text-gray); font-weight: 700; font-size: 18px; transition: color 0.2s; }
         .nav-menu li a:hover { color: var(--brand-blue); }
 
-        /* 로그인/가입 링크 스타일 */
+        .nav-right { display: flex; align-items: center; }
         .auth-links { display: flex; align-items: center; gap: 10px; margin-right: 20px; font-size: 14px; color: #666; white-space: nowrap; }
-        .auth-links a { text-decoration: none; color: inherit; }
-        .auth-links a:hover { color: var(--brand-blue); }
+        .auth-links a { text-decoration: none; color: inherit; transition: color 0.2s; }
         .auth-divider { color: #ddd; font-size: 12px; }
 
-        /* 오른쪽 정렬 영역 */
-        .nav-right { display: flex; align-items: center; }
-
-        /* 전체메뉴 버튼 */
+        /* 🚩 햄버거 버튼 복구 (display: block 필수!) */
         .menu-toggle { background-color: var(--brand-blue); color: white; border: none; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; height: 80px; width: 90px; }
-        .menu-toggle span { font-size: 12px; font-weight: bold; margin-top: 5px; }
+        .menu-toggle span:last-child { font-size: 12px; font-weight: bold; margin-top: 5px; }
         .hamburger { width: 25px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; }
-        .hamburger span { width: 100%; height: 2px; background-color: white; }
+        .hamburger span { display: block; width: 100%; height: 2px; background-color: white; }
 
-        /* 2. 본문 스타일 */
-        .hero { 
-            background: linear-gradient(135deg, var(--brand-navy), var(--brand-blue)); 
-            color: white; padding: 120px 20px; text-align: center; 
-        }
+        /* 🚩 3. 본문 및 섹션 스타일 */
+        .hero { background: linear-gradient(135deg, var(--brand-navy), var(--brand-blue)); color: white; padding: 120px 20px; text-align: center; }
         .hero h1 { font-size: 48px; margin-bottom: 20px; font-weight: 800; }
         .hero p { font-size: 20px; opacity: 0.9; margin-bottom: 40px; }
         
-        .btn-join { 
-            background: #ffcc00; color: #333; border: none; padding: 18px 50px; 
-            font-size: 20px; font-weight: bold; border-radius: 50px; cursor: pointer; 
-            transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
-        }
+        .btn-join { background: #ffcc00; color: #333; border: none; padding: 18px 50px; font-size: 20px; font-weight: bold; border-radius: 50px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .btn-join:hover { transform: scale(1.05); background: white; }
 
         .section { padding: 80px 20px; max-width: 1000px; margin: 0 auto; text-align: center; }
         .section h2 { font-size: 32px; color: var(--brand-navy); margin-bottom: 40px; }
 
-        /* 정책 탭 스타일 복구 */
         .tabs { display: flex; justify-content: center; margin-bottom: 30px; gap: 10px; }
-        .tab { 
-            padding: 12px 30px; border: 1px solid #ddd; cursor: pointer; 
-            background: white; border-radius: 5px; font-weight: bold; transition: 0.3s; 
-        }
+        .tab { padding: 12px 30px; border: 1px solid #ddd; cursor: pointer; background: white; border-radius: 5px; font-weight: bold; transition: 0.3s; }
         .tab.active { background: var(--brand-navy); color: white; border-color: var(--brand-navy); }
-        .tab-content { 
-            background: white; padding: 40px; border-radius: 20px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); min-height: 120px; transition: 0.3s;
-        }
+        .tab-content { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); min-height: 120px; text-align: left; }
 
-        .support-box { background: white; border-radius: 20px; padding: 60px; border: 2px dashed var(--brand-blue); }
+        .support-box { background: white; border-radius: 20px; padding: 60px; border: 2px dashed var(--brand-blue); margin-top: 40px; }
         .support-count { font-size: 48px; font-weight: bold; color: var(--brand-blue); margin: 25px 0; }
-        .btn-support { background: var(--brand-blue); color: white; border: none; padding: 20px 60px; font-size: 22px; font-weight: bold; border-radius: 12px; cursor: pointer; }
+        .btn-support { background: var(--brand-blue); color: white; border: none; padding: 20px 60px; font-size: 22px; font-weight: bold; border-radius: 12px; cursor: pointer; width: 100%; max-width: 300px; }
 
-        /* 3. 모달 스타일 */
-        .modal { 
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; 
-        }
-        .modal-content { 
-            background: white; padding: 40px; border-radius: 20px; width: 90%; 
-            max-width: 400px; text-align: left; 
-        }
-        .modal-content input { 
-            width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; 
-            border-radius: 8px; box-sizing: border-box; font-size: 16px;
-        }
-</style>
-    
-
-    <link rel="icon" href="/favicon.png?v=1" type="image/png">
-    <link rel="apple-touch-icon" href="/favicon.png?v=1">
-    
-</head> <body>
+        /* 🚩 4. 모달 스타일 */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 400px; text-align: left; }
+        .modal-content input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+    </style>
+</head>
+<body>
 
     <header class="main-header">
         <nav class="nav-container">
             <a href="/" class="logo">
                 <span class="logo-main">미래연대</span><span class="logo-point">당</span>
             </a>
-
             <ul class="nav-menu">
                 <li><a href="#policy">핵심정책</a></li>
                 <li><a href="#support">지지현황</a></li>
                 <li><a href="#" onclick="openModal()">당원가입</a></li>
                 <li><a href="/news.html">정당소식</a></li>
             </ul>
-
-<div class="nav-right">
-    <div class="auth-links" id="authArea">
-        <a href="#" onclick="openModal()">당원가입</a>
-        <span class="auth-divider">|</span>
-        <a href="#" onclick="openLoginModal()">로그인</a>
-    </div>
-
-    <button class="menu-toggle">
-        <div class="hamburger"><span></span><span></span><span></span></div>
-        <span>전체메뉴</span>
-    </button>
-</div>
+            <div class="nav-right">
+                <div class="auth-links" id="authArea"></div>
+                <button class="menu-toggle">
+                    <div class="hamburger"><span></span><span></span><span></span></div>
+                    <span>전체메뉴</span>
+                </button>
+            </div>
         </nav>
     </header>
 
@@ -177,7 +116,7 @@ body {
         <div class="support-box">
             <h2>우리의 연대에 공감하신다면</h2>
             <div class="support-count" id="count">0</div>
-           <button class="btn-support" onclick="openModal()">👍 지지 보태기</button>
+            <button class="btn-support" onclick="supportAction()">👍 지지 보태기</button>
         </div>
     </div>
 
@@ -193,18 +132,18 @@ body {
     </div>
     
     <div class="modal" id="loginModal">
-    <div class="modal-content">
-        <h3>당원 로그인</h3>
-        <p>미래연대당에 오신 것을 환영합니다.</p>
-        <input type="text" id="loginName" placeholder="이름을 입력하세요">
-        <input type="email" id="loginEmail" placeholder="이메일 주소를 입력하세요">
-        <button class="btn-support" style="width: 100%; margin-top: 20px;" onclick="submitLogin()">로그인하기</button>
-        <p style="text-align: center; color: #888; font-size: 13px; cursor: pointer; margin-top: 15px;" onclick="closeLoginModal()">닫기</p>
+        <div class="modal-content">
+            <h3>당원 로그인</h3>
+            <p>미래연대당에 오신 것을 환영합니다.</p>
+            <input type="text" id="loginName" placeholder="이름을 입력하세요">
+            <input type="email" id="loginEmail" placeholder="이메일 주소를 입력하세요">
+            <button class="btn-support" style="width: 100%; margin-top: 20px;" onclick="submitLogin()">로그인하기</button>
+            <p style="text-align: center; color: #888; font-size: 13px; cursor: pointer; margin-top: 15px;" onclick="closeLoginModal()">닫기</p>
+        </div>
     </div>
-</div>
 
     <script>
-        // 1. 정책 탭 로직 복구
+        // 1. 정책 데이터
         const policies = [
             { title: "📈 경제 부흥", desc: "중소기업 지원 확대와 신산업 육성을 통해 일자리를 창출하고 서민 경제를 살리겠습니다." },
             { title: "🌿 환경 보호", desc: "탄소 중립 실현과 신재생 에너지 투자를 통해 우리 아이들에게 깨끗한 미래를 물려주겠습니다." },
@@ -215,202 +154,114 @@ body {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             el.classList.add('active');
             const content = document.getElementById('tabContent');
-            content.style.opacity = 0;
-            setTimeout(() => {
-                content.innerHTML = `<h3>${policies[index].title}</h3><p>${policies[index].desc}</p>`;
-                content.style.opacity = 1;
-            }, 200);
+            content.innerHTML = `<h3>${policies[index].title}</h3><p>${policies[index].desc}</p>`;
         }
 
-        // 2. 당원가입 유효성 검사 (입력해주세요! / 감사합니다!)
-async function validateAndSubmit() {
-    const name = document.getElementById('userName').value.trim();
-    const email = document.getElementById('userEmail').value.trim();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // 2. 당원가입 (중복체크 포함)
+        async function validateAndSubmit() {
+            const name = document.getElementById('userName').value.trim();
+            const email = document.getElementById('userEmail').value.trim();
+            if (!name || !email) { alert('입력해주세요!'); return; }
 
-    // 1. 빈칸 체크
-    if (name === "" || email === "") {
-        alert('입력해주세요!');
-        return;
-    } 
+            try {
+                const res = await fetch('/api/join', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    alert("미래연대당의 당원이 되신 것을 환영합니다!");
+                    location.reload();
+                } else {
+                    alert(data.error || "가입 실패");
+                }
+            } catch (e) { alert("서버 연결 실패"); }
+        }
 
-    // 2. 이메일 형식 체크
-    if (!emailRegex.test(email)) {
-        alert('올바른 이메일 형식을 입력해주세요! (예: name@example.com)');
-        return;
-    }
-    
-
-    // 🚀 [추가된 부분] 서버로 데이터 진짜 보내기
-    try {
-const res = await fetch('/api/join', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email })
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-        alert("미래연대당의 당원이 되신 것을 환영합니다!");
-        location.reload();
-    } else {
-        // 🚩 서버가 보낸 에러 메시지("이미 가입된 이메일입니다.")를 띄웁니다.
-        alert(data.error || "가입에 실패했습니다.");
-    }
-    } catch (error) {
-        console.error('에러 발생:', error);
-        alert('서버와 연결할 수 없습니다.');
-    }
-}
-
+        // 🚩 3. 통합 로그인 함수 (isAdmin 저장 해결!)
         async function submitLogin() {
-    const name = document.getElementById('loginName').value; // 실제 input ID에 맞게 수정
-    const email = document.getElementById('loginEmail').value;
+            const name = document.getElementById('loginName').value.trim();
+            const email = document.getElementById('loginEmail').value.trim();
+            if(!name || !email) { alert("입력해주세요!"); return; }
 
-    const res = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email })
-    });
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email })
+                });
+                const data = await res.json();
 
-    if (res.ok) {
-        const data = await res.json();
-        
-        // 🚩 [필수] 이 두 줄이 있어야 상세페이지에서 null이 안 뜹니다!
-        localStorage.setItem('userName', data.userName);
-        localStorage.setItem('isAdmin', data.isAdmin); // 서버가 준 true/false 저장
-        
-        alert(data.userName + " 관리자님, 환영합니다!");
-        location.reload(); 
-    } else {
-        alert("정보를 다시 확인해주세요.");
-    }
-}
-        // 3. 지지하기 & 꽃가루
+                if(res.ok) {
+                    // 🚩 핵심: 서버가 준 isAdmin 값을 금고에 꼭 넣습니다!
+                    localStorage.setItem('userName', data.userName);
+                    localStorage.setItem('isAdmin', data.isAdmin); 
+                    
+                    alert(`${data.userName}님, 환영합니다!`);
+                    location.reload();
+                } else {
+                    alert(data.error || "일치하는 정보가 없습니다.");
+                }
+            } catch (e) { alert("서버 연결 실패"); }
+        }
+
+        // 4. UI 상태 업데이트 (로그인 여부에 따라 상단 메뉴 변경)
+        function updateHeaderUI() {
+            const userName = localStorage.getItem('userName');
+            const authArea = document.getElementById('authArea');
+            if (!authArea) return;
+
+            if (userName) {
+                authArea.innerHTML = `
+                    <span style="color:var(--brand-navy); font-weight:bold; margin-right:5px;">${userName} 당원님</span>
+                    <span class="auth-divider">|</span>
+                    <a href="#" onclick="logout()">로그아웃</a>
+                `;
+            } else {
+                authArea.innerHTML = `
+                    <a href="#" onclick="openModal()">당원가입</a>
+                    <span class="auth-divider">|</span>
+                    <a href="#" onclick="openLoginModal()">로그인</a>
+                `;
+            }
+        }
+
+        function logout() {
+            if(confirm("로그아웃 하시겠습니까?")) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        // 5. 지지하기 및 지지자 수 불러오기
+        async function loadSupportCount() {
+            try {
+                const res = await fetch('/api/count');
+                const data = await res.json();
+                document.getElementById('count').innerText = Number(data.count).toLocaleString();
+            } catch (e) { console.error("카운트 로드 실패"); }
+        }
+
         function supportAction() {
-            count++;
-            document.getElementById('count').innerText = count.toLocaleString();
             confetti({
                 particleCount: 150, spread: 70, origin: { y: 0.6 },
                 colors: ['#007acc', '#1d458b', '#ffcc00']
             });
-            alert('연대의 소중한 한 표, 감사합니다!');
+            alert('연대에 동참해주셔서 감사합니다! 당원가입도 잊지 마세요!');
         }
 
-        // [추가] 페이지가 로딩되면 자동으로 실행되는 함수
-window.onload = async function() {
-    try {
-        // 서버에 "지금 몇 명이야?"라고 물어봅니다.
-        const response = await fetch('/api/count');
-        const data = await response.json();
-        
-        // 화면에 있는 id="count" 자리에 진짜 숫자를 넣습니다.
-        // 숫자가 세 자리마다 콤마(,)가 찍히도록 toLocaleString()을 썼어요.
-        const countElement = document.getElementById('count');
-        if (countElement) {
-            countElement.innerText = Number(data.count).toLocaleString();
-        }
-    } catch (e) {
-        console.error("실시간 인원수를 가져오는 데 실패했습니다.", e);
-    }
-};
-
+        // 모달 제어
         function openModal() { document.getElementById('modal').style.display = 'flex'; }
         function closeModal() { document.getElementById('modal').style.display = 'none'; }
-        // 스크립트 맨 아래에 이 한 줄만 추가해도 해결됩니다!
-        function openJoinModal() { openModal(); }
-        /* 🚩 [추가] 로그인 관련 함수들 */
-function openLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
-function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
+        function openLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
+        function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
 
-async function submitLogin() {
-    const name = document.getElementById('loginName').value.trim();
-    const email = document.getElementById('loginEmail').value.trim();
-
-    if(!name || !email) { alert("이름과 이메일을 입력해주세요!"); return; }
-
-    try {
-        const res = await fetch('/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email })
-        });
-        if(res.ok) {
-            alert(`${name} 당원님, 환영합니다!`);
-            closeLoginModal();
-            // 💡 여기서 로그아웃 버튼으로 바꿔주는 기능을 넣으면 완벽합니다.
-        } else {
-            alert("정보가 일치하지 않습니다.");
-        }
-    } catch (e) { alert("서버 연결 실패!"); }
-}
-
-        // 1. 화면의 로그인 메뉴를 업데이트하는 함수
-function updateHeaderUI() {
-    const userName = localStorage.getItem('userName');
-    const authArea = document.getElementById('authArea');
-
-    if (!authArea) return; // authArea가 없는 경우 오류 방지
-
-    if (userName) {
-        // ✅ 로그인 상태: 이름을 클릭하면 마이페이지(/mypage.html)로 이동하게 만듭니다.
-        authArea.innerHTML = `
-            <a href="/mypage.html" style="color:var(--brand-navy); font-weight:bold; text-decoration:none; margin-right:5px;">
-                ${userName} 당원님
-            </a>
-            <span class="auth-divider">|</span>
-            <a href="#" onclick="logout()">로그아웃</a>
-        `;
-    } else {
-        // ❌ 로그아웃 상태: 기존처럼 당원가입과 로그인 버튼을 보여줍니다.
-        authArea.innerHTML = `
-            <a href="#" onclick="openModal()">당원가입</a>
-            <span class="auth-divider">|</span>
-            <a href="#" onclick="openLoginModal()">로그인</a>
-        `;
-    }
-}
-
-// 2. 로그인 함수 수정 (성공 시 저장)
-async function submitLogin() {
-    const name = document.getElementById('loginName').value.trim();
-    const email = document.getElementById('loginEmail').value.trim();
-
-    try {
-        const res = await fetch('/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email })
-        });
-
-        if(res.ok) {
-            alert(`${name} 당원님, 환영합니다!`);
-            localStorage.setItem('userName', name); // 🚩 이름 저장
-            closeLoginModal();
-            updateHeaderUI(); // 🚩 UI 즉시 변경
-        } else {
-            alert("정보가 일치하지 않습니다.");
-        }
-    } catch (e) { alert("서버 연결 실패!"); }
-}
-
-// 3. 로그아웃 함수
-function logout() {
-    if(confirm("로그아웃 하시겠습니까?")) {
-        localStorage.removeItem('userName'); // 🚩 정보 삭제
-        alert("로그아웃 되었습니다.");
-        location.reload(); // 페이지 새로고침
-    }
-}
-
-// 4. 페이지 로드 시 UI 체크
-// 기존 window.onload가 있다면 그 안에 updateHeaderUI()를 추가하세요.
-const originalOnload = window.onload;
-window.onload = function() {
-    if (originalOnload) originalOnload();
-    updateHeaderUI();
-};
+        // 페이지 로드 시 실행
+        window.onload = function() {
+            loadSupportCount();
+            updateHeaderUI();
+        };
     </script>
 </body>
 </html>
