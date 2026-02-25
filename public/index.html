@@ -166,10 +166,10 @@ html {
             </ul>
 
 <div class="nav-right">
-    <div class="auth-links">
-        <a href="#" onclick="openJoinModal()">당원가입</a>
+    <div class="auth-links" id="authArea">
+        <a href="#" onclick="openModal()">당원가입</a>
         <span class="auth-divider">|</span>
-       <a href="#" onclick="openLoginModal()">로그인</a>
+        <a href="#" onclick="openLoginModal()">로그인</a>
     </div>
 
     <button class="menu-toggle">
@@ -348,6 +348,68 @@ async function submitLogin() {
         }
     } catch (e) { alert("서버 연결 실패!"); }
 }
+
+        // 1. 화면의 로그인 메뉴를 업데이트하는 함수
+function updateHeaderUI() {
+    const userName = localStorage.getItem('userName');
+    const authArea = document.getElementById('authArea');
+
+    if (userName) {
+        // 로그인 상태: 마이페이지 | 로그아웃 표시
+        authArea.innerHTML = `
+            <span style="color:var(--brand-navy); font-weight:bold;">${userName} 당원님</span>
+            <span class="auth-divider">|</span>
+            <a href="#" onclick="logout()">로그아웃</a>
+        `;
+    } else {
+        // 로그아웃 상태: 당원가입 | 로그인 표시
+        authArea.innerHTML = `
+            <a href="#" onclick="openModal()">당원가입</a>
+            <span class="auth-divider">|</span>
+            <a href="#" onclick="openLoginModal()">로그인</a>
+        `;
+    }
+}
+
+// 2. 로그인 함수 수정 (성공 시 저장)
+async function submitLogin() {
+    const name = document.getElementById('loginName').value.trim();
+    const email = document.getElementById('loginEmail').value.trim();
+
+    try {
+        const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email })
+        });
+
+        if(res.ok) {
+            alert(`${name} 당원님, 환영합니다!`);
+            localStorage.setItem('userName', name); // 🚩 이름 저장
+            closeLoginModal();
+            updateHeaderUI(); // 🚩 UI 즉시 변경
+        } else {
+            alert("정보가 일치하지 않습니다.");
+        }
+    } catch (e) { alert("서버 연결 실패!"); }
+}
+
+// 3. 로그아웃 함수
+function logout() {
+    if(confirm("로그아웃 하시겠습니까?")) {
+        localStorage.removeItem('userName'); // 🚩 정보 삭제
+        alert("로그아웃 되었습니다.");
+        location.reload(); // 페이지 새로고침
+    }
+}
+
+// 4. 페이지 로드 시 UI 체크
+// 기존 window.onload가 있다면 그 안에 updateHeaderUI()를 추가하세요.
+const originalOnload = window.onload;
+window.onload = function() {
+    if (originalOnload) originalOnload();
+    updateHeaderUI();
+};
     </script>
 </body>
 </html>
