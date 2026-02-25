@@ -6,19 +6,120 @@
     <title>마이페이지 - 미래연대당</title>
     <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;700&display=swap" rel="stylesheet">
     <style>
+    <style>
+/* 🚩 1. 픽셀 밀림 방지 (어떤 페이지든 똑같은 너비 유지) */
+html { 
+    overflow-y: scroll; 
+}
+* { 
+    box-sizing: border-box; 
+}
+
+/* 🚩 2. 통합된 상단 링크 스타일 */
+.auth-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;        /* 간격을 10px로 통일 */
+    margin-right: 20px; /* 오른쪽 여백을 20px로 통일 */
+    font-size: 14px;  /* 글자 크기를 14px로 통일 */
+    color: #666;
+    white-space: nowrap;
+}
+
+/* 🚩 3. 배경색 통일 */
+body { 
+    font-family: 'Pretendard', sans-serif; 
+    margin: 0; 
+    background: #fff; /* 배경을 흰색으로 통일하거나 변수로 고정 */
+    color: var(--text-gray); 
+    scroll-behavior: smooth; 
+}
         :root {
             --brand-blue: #007acc;
             --brand-navy: #1d458b;
+            --text-gray: #333;
+            --border-light: #e1e1e1;
             --bg-light: #f8f9fa;
         }
-        body { font-family: 'Pretendard', sans-serif; margin: 0; background: var(--bg-light); color: #333; }
-        html { overflow-y: scroll; }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background: #fff; color: var(--text-gray); scroll-behavior: smooth; }
 
-        /* 상단 헤더 (기존과 동일) */
-        .main-header { background-color: #fff; border-bottom: 1px solid #e1e1e1; height: 80px; display: flex; align-items: center; }
+        /* 상단 헤더 레이아웃 */
+        .main-header { background-color: #fff; border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: 1000; height: 80px; display: flex; align-items: center; }
         .nav-container { width: 100%; max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
-        .logo { font-size: 26px; font-weight: 800; text-decoration: none; color: var(--brand-navy); }
+        
+        /* 로고 및 메뉴 링크 */
+        .logo { font-size: 26px; font-weight: 800; text-decoration: none; display: flex; align-items: center; }
+        .logo-main { color: var(--brand-navy); }
+        .logo-point { color: var(--brand-blue); }
+        .nav-menu { display: flex; list-style: none; gap: 40px; margin: 0; padding: 0; }
+        .nav-menu li a { text-decoration: none; color: var(--text-gray); font-weight: 700; font-size: 18px; transition: color 0.2s; }
+        .nav-menu li a:hover { color: var(--brand-blue); }
 
+        /* 로그인/가입 링크 스타일 */
+        .auth-links { display: flex; align-items: center; gap: 10px; margin-right: 20px; font-size: 14px; color: #666; white-space: nowrap; }
+        .auth-links a { text-decoration: none; color: inherit; }
+        .auth-links a:hover { color: var(--brand-blue); }
+        .auth-divider { color: #ddd; font-size: 12px; }
+
+        /* 오른쪽 정렬 영역 */
+        .nav-right { display: flex; align-items: center; }
+
+        /* 전체메뉴 버튼 */
+        .menu-toggle { background-color: var(--brand-blue); color: white; border: none; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; height: 80px; width: 90px; }
+        .menu-toggle span { font-size: 12px; font-weight: bold; margin-top: 5px; }
+        .hamburger { width: 25px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; }
+        .hamburger span { width: 100%; height: 2px; background-color: white; }
+
+        /* 소식 페이지 레이아웃 */
+        .container { max-width: 1100px; margin: 60px auto; padding: 0 20px; text-align: center; }
+        h1 { font-size: 32px; margin-bottom: 50px; }
+        .tabs { display: flex; justify-content: space-around; border-bottom: 2px solid #eee; margin-bottom: 30px; }
+        .tab { padding: 15px 20px; cursor: pointer; font-weight: bold; color: #666; position: relative; }
+        .tab.active { color: var(--brand-blue); }
+        .tab.active::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 3px; background: var(--brand-blue); }
+
+        /* 테이블 스타일 */
+        .news-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .news-table th { padding: 15px; border-top: 2px solid #333; border-bottom: 1px solid #ddd; background: #fcfcfc; font-size: 15px; }
+        .news-table td { padding: 15px; border-bottom: 1px solid #eee; font-size: 15px; color: #444; }
+        .cat-tag { color: var(--brand-blue); font-weight: bold; margin-right: 5px; }
+
+        /* 모달 스타일 */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 400px; text-align: left; }
+        .modal-content input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .btn-submit { background: var(--brand-blue); color: white; border: none; padding: 20px; width: 100%; font-size: 20px; font-weight: bold; border-radius: 12px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<header class="main-header">
+        <nav class="nav-container">
+            <a href="/" class="logo">
+                <span class="logo-main">미래연대</span><span class="logo-point">당</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="/#policy">핵심정책</a></li>
+                <li><a href="/#support">지지현황</a></li>
+                <li><a href="#" onclick="openModal()">당원가입</a></li>
+                <li><a href="/news.html" style="color: var(--brand-blue);">정당소식</a></li>
+            </ul>
+
+            <div class="nav-right">
+               <div class="nav-right">
+    <div class="auth-links" id="authArea">
+        <a href="#" onclick="openModal()">당원가입</a>
+        <span class="auth-divider">|</span>
+        <a href="#" onclick="openLoginModal()">로그인</a>
+    </div>
+
+    <button class="menu-toggle">
+        <div class="hamburger"><span></span><span></span><span></span></div>
+        <span>전체메뉴</span>
+    </button>
+</div>
+        </nav>
+    </header>
         /* 마이페이지 레이아웃 */
         .container { max-width: 1000px; margin: 50px auto; padding: 0 20px; display: grid; grid-template-columns: 300px 1fr; gap: 30px; }
 
