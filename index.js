@@ -156,9 +156,21 @@ app.delete('/api/news/:id', async (req, res) => {
   } catch (err) { res.status(500).send(err); }
 });
 
+app.post('/api/login', async (req, res) => {
+  const { name, email } = req.body;
+  // ... DB 조회 코드 생략 ...
+  if (rows.length > 0) {
+    const user = rows[0];
+    // 🚩 특정 이메일(예: admin@future.com)을 관리자로 지정합니다.
+    const isAdmin = (user.email === 'admin@future.com'); 
+    res.status(200).json({ success: true, userName: user.name, isAdmin: isAdmin });
+  }
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`미래연대당 서버 가동 중!`));
 module.exports = app;
+
 
 
 
