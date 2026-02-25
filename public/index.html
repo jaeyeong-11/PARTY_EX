@@ -243,21 +243,21 @@ async function validateAndSubmit() {
 
     // 🚀 [추가된 부분] 서버로 데이터 진짜 보내기
     try {
-        const response = await fetch('/api/join', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email }) // 이름과 이메일을 포장해서 보냄
-        });
+const res = await fetch('/api/join', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email })
+    });
 
-        if (response.ok) {
-            // 성공했을 때만 감사 인사!
-            alert('감사합니다! 미래연대당의 당원이 되신 것을 환영합니다.');
-            closeModal();
-            document.getElementById('userName').value = "";
-            document.getElementById('userEmail').value = "";
-        } else {
-            alert('서버 저장에 실패했습니다. (DB 연결을 확인하세요)');
-        }
+    const data = await res.json();
+
+    if (res.ok) {
+        alert("미래연대당의 당원이 되신 것을 환영합니다!");
+        location.reload();
+    } else {
+        // 🚩 서버가 보낸 에러 메시지("이미 가입된 이메일입니다.")를 띄웁니다.
+        alert(data.error || "가입에 실패했습니다.");
+    }
     } catch (error) {
         console.error('에러 발생:', error);
         alert('서버와 연결할 수 없습니다.');
