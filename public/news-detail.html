@@ -15,12 +15,12 @@
             --bg-light: #f8f9fa;
         }
         
-        /* 🚩 기본 설정 및 픽셀 밀림 방지 */
+        /* 🚩 픽셀 밀림 방지 및 배경 통일 */
         html { overflow-y: scroll; }
         * { box-sizing: border-box; }
         body { font-family: 'Pretendard', sans-serif; margin: 0; background: #fff; color: var(--text-gray); scroll-behavior: smooth; }
 
-        /* 상단 헤더 레이아웃 */
+        /* 🚩 index.html에서 가져온 헤더 스타일 */
         .main-header { background-color: #fff; border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: 1000; height: 80px; display: flex; align-items: center; }
         .nav-container { width: 100%; max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
         
@@ -35,15 +35,16 @@
         .nav-right { display: flex; align-items: center; }
         .auth-links { display: flex; align-items: center; gap: 10px; margin-right: 20px; font-size: 14px; color: #666; white-space: nowrap; }
         .auth-links a { text-decoration: none; color: inherit; }
-        .auth-divider { color: #ddd; font-size: 12px; }
 
-        /* 🚩 햄버거 버튼 디자인 복구 */
+        /* 🚩 햄버거 버튼 디자인 (index.html 복사본) */
         .menu-toggle { background-color: var(--brand-blue); color: white; border: none; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; height: 80px; width: 90px; }
-        .menu-toggle span:last-child { font-size: 12px; font-weight: bold; margin-top: 5px; }
-        .hamburger { width: 25px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 2px; }
+        .menu-toggle span { font-size: 12px; font-weight: bold; margin-top: 5px; }
+        .hamburger { width: 25px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; }
+        
+        /* 🚩 핵심: 햄버거 선이 깨지지 않게 display: block 추가 */
         .hamburger span { display: block; width: 100%; height: 2px; background-color: white; }
 
-        /* 상세 페이지 레이아웃 */
+        /* 상세 페이지 본문 디자인 */
         .container { max-width: 1000px; margin: 60px auto; padding: 0 20px; }
         .detail-header { border-top: 2px solid #333; border-bottom: 1px solid #eee; padding: 30px 0; margin-bottom: 40px; text-align: left; }
         .detail-title { font-size: 26px; font-weight: 800; line-height: 1.4; margin-bottom: 15px; }
@@ -52,7 +53,7 @@
         .detail-footer { border-top: 1px solid #eee; padding-top: 30px; text-align: left; margin-bottom: 40px; }
         .footer-sign { font-weight: bold; font-size: 16px; line-height: 1.8; color: #222; }
 
-        /* 하단 버튼 영역 */
+        /* 버튼 영역 */
         .btn-area { display: flex; justify-content: flex-end; gap: 10px; }
         .btn-list { background: var(--brand-navy); color: white; padding: 12px 30px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 15px; border: none; cursor: pointer; }
         .btn-delete { background: #ff4d4d; color: white; padding: 12px 30px; border-radius: 4px; border: none; font-weight: bold; font-size: 15px; cursor: pointer; }
@@ -76,7 +77,9 @@
                 <div class="auth-links" id="authArea"></div>
                 <button class="menu-toggle">
                     <div class="hamburger">
-                        <span></span><span></span><span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
                     </div>
                     <span>전체메뉴</span>
                 </button>
@@ -105,14 +108,13 @@
     </div>
 
     <script>
-        // 1. 게시물 데이터 불러오기
+        // 1. 게시물 상세 데이터 로드
         async function loadDetail() {
             const urlParams = new URLSearchParams(window.location.search);
             const newsId = urlParams.get('id');
             if (!newsId) { location.href = "/news.html"; return; }
             
             try {
-                // 🚩 수정: 백틱(`)을 사용해야 변수(${newsId})가 인식됩니다.
                 const res = await fetch(`/api/news/${newsId}`);
                 const data = await res.json();
                 document.getElementById('dispTitle').innerText = data.title;
@@ -121,12 +123,10 @@
                 document.getElementById('signDate').innerText = new Date(data.created_at).toLocaleDateString('ko-KR', {
                     year: 'numeric', month: 'long', day: 'numeric'
                 });
-            } catch (e) { 
-                document.getElementById('dispBody').innerText = "데이터 로딩 오류가 발생했습니다."; 
-            }
+            } catch (e) { document.getElementById('dispBody').innerText = "데이터 로딩 오류"; }
         }
 
-        // 2. 관리자 권한 체크 및 버튼 렌더링
+        // 2. 관리자 권한 체크 (localStorage 기반)
         function checkAdminPermission() {
             const isAdmin = localStorage.getItem('isAdmin') === 'true'; 
             const btnArea = document.getElementById('adminBtnArea');
@@ -134,7 +134,6 @@
             const id = urlParams.get('id');
 
             if (isAdmin) {
-                // 🚩 수정: 백틱(`)으로 감싸서 문자열로 처리해야 합니다.
                 btnArea.innerHTML = `
                     <button class="btn-edit" onclick="location.href='/news-edit.html?id=${id}'">수정</button>
                     <button class="btn-delete" onclick="deleteNews()">삭제</button>
@@ -149,12 +148,8 @@
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
 
-            // 🚩 수정: 백틱(`) 사용
             const res = await fetch(`/api/news/${id}`, { method: 'DELETE' });
-            if (res.ok) { 
-                alert("삭제되었습니다."); 
-                location.href = "/news.html"; 
-            }
+            if (res.ok) { alert("삭제되었습니다."); location.href = "/news.html"; }
         }
 
         // 4. 상단 바 업데이트
@@ -164,22 +159,17 @@
             if (!authArea) return;
 
             if (userName) {
-                // 🚩 수정: 백틱(`) 사용
                 authArea.innerHTML = `
-                    <a href="/mypage.html" style="color:var(--brand-navy); font-weight:bold;">${userName} 당원님</a>
+                    <a href="/mypage.html" style="color:var(--brand-navy); font-weight:bold; text-decoration:none; margin-right:5px;">${userName} 당원님</a>
                     <span class="auth-divider">|</span>
                     <a href="#" onclick="logout()">로그아웃</a>
                 `;
             } else {
-                // 🚩 수정: 따옴표(')로 감싸서 문자열 처리
                 authArea.innerHTML = `<a href="/" onclick="alert('메인으로 이동')">당원가입</a> | <a href="/" onclick="alert('메인으로 이동')">로그인</a>`;
             }
         }
 
-        function logout() { 
-            localStorage.clear(); 
-            location.reload(); 
-        }
+        function logout() { localStorage.clear(); location.reload(); }
 
         window.onload = function() {
             loadDetail();
@@ -187,5 +177,7 @@
             checkAdminPermission();
         };
     </script>
+</body>
+</html>
 </body>
 </html>
