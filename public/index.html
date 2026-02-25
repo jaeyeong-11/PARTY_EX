@@ -66,12 +66,16 @@
     <header class="main-header">
         <nav class="nav-container">
             <a href="/" class="logo"><span class="logo-main">미래연대</span><span class="logo-point">당</span></a>
-            <ul class="nav-menu">
-                <li><a href="#policy">핵심정책</a></li>
-                <li><a href="#support">지지현황</a></li>
-                <li><a href="#" onclick="openModal()">당원가입</a></li>
-                <li><a href="/news.html">정당소식</a></li>
-            </ul>
+<ul class="nav-menu">
+    <li><a href="#policy">핵심정책</a></li>
+    <li><a href="#support">지지현황</a></li>
+    
+    <li>
+        <a href="/dangwon.html" onclick="checkMemberAccess(event)">당원</a>
+    </li>
+    
+    <li><a href="/news.html">정당소식</a></li>
+</ul>
             <div class="nav-right">
                 <div class="auth-links" id="authArea"></div>
                 <button class="menu-toggle">
@@ -232,6 +236,20 @@
             updateHeaderUI();
             loadSupportCount();
         };
+
+        // 🚩 [추가] 당원 게시판 접속 권한 확인 함수
+function checkMemberAccess(event) {
+    const userName = localStorage.getItem('userName');
+
+    if (!userName) {
+        // 1. 로그인을 안 했다면?
+        event.preventDefault(); // 🛑 링크 이동을 막습니다! (제일 중요)
+        alert("당원 전용 공간입니다. 로그인해주세요.");
+        openLoginModal(); // 로그인 창을 띄웁니다.
+    } 
+    // 2. 로그인을 했다면? 
+    // 아무것도 막지 않으므로 href="/dangwon.html"로 자연스럽게 이동합니다.
+}
     </script>
 </body>
 </html>
