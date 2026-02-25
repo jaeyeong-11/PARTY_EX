@@ -173,6 +173,24 @@
             loadDetail();
             updateHeaderUI();
         };
+
+        // updateHeaderUI 함수나 별도 함수에서 처리
+function checkAdminPermission() {
+    const isAdmin = localStorage.getItem('isAdmin') === 'true'; // 저장된 값 확인
+    const btnArea = document.querySelector('.btn-area');
+
+    if (isAdmin) {
+        // 관리자라면: 수정/삭제 버튼을 보여줌
+        btnArea.innerHTML = `
+            <button class="btn-edit" onclick="goToEdit()">수정</button>
+            <button class="btn-delete" onclick="deleteNews()">삭제</button>
+            <a href="/news.html" class="btn-list">목록</a>
+        `;
+    } else {
+        // 일반 당원이라면: 목록 버튼만 보여줌
+        btnArea.innerHTML = `<a href="/news.html" class="btn-list">목록</a>`;
+    }
+}
     </script>
 </body>
 </html>
