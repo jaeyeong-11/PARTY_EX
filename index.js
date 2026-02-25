@@ -84,9 +84,35 @@ app.get('/api/news', async (req, res) => {
   }
 });
 
+// [추가] 로그인 확인 API
+app.post('/api/login', async (req, res) => {
+  const { name, email } = req.body;
+  try {
+    const client = await db.connect();
+    // 🔍 장부(members)에서 이름과 이메일이 일치하는 사람이 있는지 찾습니다.
+    const { rows } = await client.sql`
+      SELECT * FROM members 
+      WHERE name = ${name} AND email = ${email}
+      LIMIT 1;
+    `;
+    client.release();
+
+    if (rows.length > 0) {
+      // 당원이 맞음!
+      res.status(200).json({ success: true, user: rows[0] });
+    } else {
+      // 당원이 아님
+      res.status(404).json({ error: '회원을 찾을 수 없습니다.' });
+    }
+  } catch (err) {
+    res.status(500).json({ error: '서버 오류' });
+  }
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`미래연대당 서버 가동 중!`));
 module.exports = app;
+
 
 
 
