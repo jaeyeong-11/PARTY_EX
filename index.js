@@ -107,7 +107,6 @@ app.post('/api/login', async (req, res) => {
   const { name, email } = req.body;
   try {
     const client = await db.connect();
-    // 🔍 DB에서 해당 사용자를 찾습니다.
     const { rows } = await client.sql`
       SELECT * FROM members WHERE name = ${name} AND email = ${email} LIMIT 1;
     `;
@@ -115,18 +114,35 @@ app.post('/api/login', async (req, res) => {
 
     if (rows.length > 0) {
       const user = rows[0];
-      // 🚩 핵심: DB의 is_admin 컬럼 값을 그대로 보냅니다!
+      
+      // 🔍 [진단 로그] 서버 터미널에 true라고 찍히는지 확인해보세요!
+      console.log(`로그인 시도: ${user.name}, 관리자여부: ${user.is_admin}`);
+
       res.status(200).json({ 
         success: true, 
         userName: user.name, 
-        isAdmin: user.is_admin // SQL에서 설정한 true/false 값
+        isAdmin: user.is_admin // 🚩 DB의 't' 값이 true(boolean)로 전달됩니다.
       });
     } else {
       res.status(404).json({ error: '회원 정보를 찾을 수 없습니다.' });
     }
-  } catch (err) {
-    res.status(500).json({ error: '서버 오류' });
-  }
+  } catch (err) { res.status(500).json({ error: '서버 오류' }); }
+});
+
+// 📝 [기능 추가] 뉴스 수정하기 (PUT)
+app.put('/api/news/:id', async (req, res) => {
+  const { id } = req.params;
+  const { title, category, content } = req.body;
+  try {
+    const client = await db.connect();
+    await client.sql`
+      UPDATE news 
+      SET title = ${title}, category = ${category}, content = ${content}
+      WHERE id = ${id};
+    `;
+    client.release();
+    res.json({ success: true });
+  } catch (err) { res.status(500).json({ error: '수정 실패' }); }
 });
 
 // [기능 6] 뉴스 상세 및 등록/삭제
@@ -163,6 +179,7 @@ app.delete('/api/news/:id', async (req, res) => {
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`🚀 미래연대당 서버 가동 중!`));
 module.exports = app;
+
 
 
 
