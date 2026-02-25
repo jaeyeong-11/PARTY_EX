@@ -7,62 +7,76 @@
     <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;700&display=swap" rel="stylesheet">
     <link rel="icon" href="/favicon.png?v=1" type="image/png">
     <style>
-        /* 🚩 1. 공통 스타일 (디자인 통일) */
+        /* 🚩 1. 공통 및 픽셀 밀림 방지 */
         :root {
             --brand-blue: #007acc;
             --brand-navy: #1d458b;
             --text-gray: #333;
             --border-light: #e1e1e1;
+            --bg-light: #f8f9fa;
         }
         * { box-sizing: border-box; }
-        html { overflow-y: scroll; } /* 스크롤바 자리 고정 */
-        body { font-family: 'Pretendard', sans-serif; margin: 0; background: #fff; color: var(--text-gray); }
+        html { overflow-y: scroll; } 
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background: #fff; color: var(--text-gray); scroll-behavior: smooth; }
 
-        /* 상단 헤더 레이아웃 */
+        /* 🚩 2. 상단 헤더 (전체 페이지 동기화) */
         .main-header { background-color: #fff; border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: 1000; height: 80px; display: flex; align-items: center; }
         .nav-container { width: 100%; max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
-        .logo { font-size: 26px; font-weight: 800; text-decoration: none; color: var(--brand-navy); }
+        .logo { font-size: 26px; font-weight: 800; text-decoration: none; display: flex; align-items: center; }
+        .logo-main { color: var(--brand-navy); }
+        .logo-point { color: var(--brand-blue); }
         .nav-menu { display: flex; list-style: none; gap: 40px; margin: 0; padding: 0; }
-        .nav-menu li a { text-decoration: none; color: var(--text-gray); font-weight: 700; font-size: 18px; }
-        .auth-links { display: flex; align-items: center; gap: 10px; margin-right: 20px; font-size: 14px; color: #666; }
-        .auth-links a { text-decoration: none; color: inherit; }
-        .auth-divider { color: #ddd; font-size: 12px; }
-        .menu-toggle { background-color: var(--brand-blue); color: white; border: none; height: 80px; width: 90px; cursor: pointer; }
+        .nav-menu li a { text-decoration: none; color: var(--text-gray); font-weight: 700; font-size: 18px; transition: color 0.2s; }
+        .nav-menu li a:hover { color: var(--brand-blue); }
 
-        /* 🚩 2. 상세 페이지 본문 디자인 */
+        .auth-links { display: flex; align-items: center; gap: 10px; margin-right: 20px; font-size: 14px; color: #666; white-space: nowrap; }
+        .auth-links a { text-decoration: none; color: inherit; transition: color 0.2s; }
+        .auth-links a:hover { color: var(--brand-blue); }
+        .auth-divider { color: #ddd; font-size: 12px; }
+        .nav-right { display: flex; align-items: center; }
+
+        /* 햄버거 버튼 복구 */
+        .menu-toggle { background-color: var(--brand-blue); color: white; border: none; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; height: 80px; width: 90px; }
+        .menu-toggle span { font-size: 12px; font-weight: bold; margin-top: 5px; }
+        .hamburger { width: 25px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; }
+        .hamburger span { width: 100%; height: 2px; background-color: white; }
+
+        /* 🚩 3. 상세 페이지 전용 디자인 */
         .container { max-width: 1100px; margin: 60px auto; padding: 0 20px; }
-        
-        /* 제목 영역 */
-        .detail-header { border-top: 2px solid #333; border-bottom: 1px solid #eee; padding: 25px 0; margin-bottom: 40px; }
-        .detail-title { font-size: 24px; font-weight: 800; line-height: 1.4; margin-bottom: 15px; }
+        .detail-header { border-top: 2px solid #333; border-bottom: 1px solid #eee; padding: 30px 0; margin-bottom: 40px; }
+        .detail-title { font-size: 26px; font-weight: 800; line-height: 1.4; margin-bottom: 15px; text-align: left; }
         .detail-meta { display: flex; justify-content: flex-end; color: #888; font-size: 14px; }
 
-        /* 내용 영역 */
-        .detail-content { font-size: 17px; line-height: 1.8; color: #444; min-height: 400px; white-space: pre-wrap; margin-bottom: 60px; }
-        .content-sub-title { font-size: 22px; font-weight: 800; text-align: center; margin-bottom: 40px; display: block; }
+        .detail-content { font-size: 17px; line-height: 1.9; color: #444; min-height: 400px; white-space: pre-wrap; margin-bottom: 60px; text-align: left; }
+        .content-sub-title { font-size: 22px; font-weight: 800; text-align: center; margin-bottom: 50px; display: block; color: #000; }
 
         /* 하단 서명 */
         .detail-footer { border-top: 1px solid #eee; padding-top: 30px; text-align: left; margin-bottom: 40px; }
-        .footer-sign { font-weight: bold; font-size: 16px; line-height: 1.6; }
+        .footer-sign { font-weight: bold; font-size: 16px; line-height: 1.8; color: #222; }
 
-        /* 목록 버튼 */
         .btn-area { display: flex; justify-content: flex-end; }
-        .btn-list { background: var(--brand-navy); color: white; padding: 10px 25px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 14px; }
+        .btn-list { background: var(--brand-navy); color: white; padding: 12px 30px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 15px; transition: 0.3s; }
+        .btn-list:hover { background: var(--brand-blue); }
     </style>
 </head>
 <body>
 
     <header class="main-header">
         <nav class="nav-container">
-            <a href="/" class="logo">미래연대<span>당</span></a>
+            <a href="/" class="logo">
+                <span class="logo-main">미래연대</span><span class="logo-point">당</span>
+            </a>
             <ul class="nav-menu">
                 <li><a href="/#policy">핵심정책</a></li>
                 <li><a href="/#support">지지현황</a></li>
                 <li><a href="/news.html">정당소식</a></li>
             </ul>
-            <div class="nav-right" style="display:flex; align-items:center;">
+            <div class="nav-right">
                 <div class="auth-links" id="authArea"></div>
-                <button class="menu-toggle">전체메뉴</button>
+                <button class="menu-toggle">
+                    <div class="hamburger"><span></span><span></span><span></span></div>
+                    <span>전체메뉴</span>
+                </button>
             </div>
         </nav>
     </header>
@@ -93,43 +107,57 @@
     </div>
 
     <script>
-        // 1. URL에서 ID 가져와서 데이터 불러오기
+        // 1. 게시물 상세 로드
         async function loadDetail() {
             const urlParams = new URLSearchParams(window.location.search);
             const newsId = urlParams.get('id');
+            if (!newsId) { alert("잘못된 접근입니다."); location.href = "/news.html"; return; }
 
             try {
                 const res = await fetch(`/api/news/${newsId}`);
+                if (!res.ok) throw new Error();
                 const data = await res.json();
 
-                // 화면에 데이터 채우기
                 document.getElementById('dispTitle').innerText = `[${data.category}] ${data.title}`;
-                document.getElementById('dispSubTitle').innerText = data.title; // 제목을 본문 강조용으로 재활용
-                document.getElementById('dispDate').innerText = new Date(data.created_at).toLocaleString();
+                document.getElementById('dispSubTitle').innerText = data.title;
+                document.getElementById('dispDate').innerText = new Date(data.created_at).toLocaleString('ko-KR');
                 document.getElementById('dispBody').innerText = data.content;
                 
-                // 서명 영역
                 document.getElementById('signDate').innerText = new Date(data.created_at).toLocaleDateString('ko-KR', {
                     year: 'numeric', month: 'long', day: 'numeric'
                 });
             } catch (e) {
-                console.error("데이터 로드 실패", e);
-                document.getElementById('dispBody').innerText = "삭제되었거나 존재하지 않는 게시물입니다.";
+                document.getElementById('dispBody').innerText = "게시물을 찾을 수 없습니다.";
             }
         }
 
-        // 2. 상단 바 로그인 상태 체크
+        // 2. 상단 바 동기화 및 마이페이지 링크
         function updateHeaderUI() {
             const userName = localStorage.getItem('userName');
             const authArea = document.getElementById('authArea');
+            if (!authArea) return;
+
             if (userName) {
-                authArea.innerHTML = `<a href="/mypage.html" style="font-weight:bold;">${userName} 당원님</a><span class="auth-divider">|</span><a href="#" onclick="logout()">로그아웃</a>`;
+                authArea.innerHTML = `
+                    <a href="/mypage.html" style="color:var(--brand-navy); font-weight:bold; text-decoration:none;">${userName} 당원님</a>
+                    <span class="auth-divider">|</span>
+                    <a href="#" onclick="logout()">로그아웃</a>
+                `;
             } else {
-                authArea.innerHTML = `<a href="#">당원가입</a><span class="auth-divider">|</span><a href="#">로그인</a>`;
+                authArea.innerHTML = `
+                    <a href="#" onclick="alert('가입은 메인페이지에서 가능합니다.')">당원가입</a>
+                    <span class="auth-divider">|</span>
+                    <a href="#" onclick="alert('로그인은 메인페이지에서 가능합니다.')">로그인</a>
+                `;
             }
         }
 
-        function logout() { localStorage.removeItem('userName'); location.reload(); }
+        function logout() { 
+            if(confirm("로그아웃 하시겠습니까?")) {
+                localStorage.removeItem('userName'); 
+                location.reload(); 
+            }
+        }
 
         window.onload = function() {
             loadDetail();
