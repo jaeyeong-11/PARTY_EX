@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 글쓰기 - 미래연대당</title>
+    <style>
+        .write-container { max-width: 800px; margin: 50px auto; padding: 30px; border: 1px solid #ddd; border-radius: 10px; }
+        input, select, textarea { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 5px; }
+        textarea { height: 400px; resize: vertical; }
+        .btn-submit { background: #1d458b; color: white; border: none; padding: 15px 30px; font-weight: bold; cursor: pointer; width: 100%; }
+    </style>
+</head>
+<body>
+    <div class="write-container">
+        <h2>📰 새 소식 등록</h2>
+        <select id="category">
+            <option>논평·브리핑</option>
+            <option>모두발언</option>
+            <option>보도자료</option>
+            <option>공지사항</option>
+        </select>
+        <input type="text" id="title" placeholder="제목을 입력하세요">
+        <textarea id="content" placeholder="내용을 입력하세요 (엔터키로 줄바꿈 가능)"></textarea>
+        <button class="btn-submit" onclick="submitNews()">게시하기</button>
+    </div>
+
+    <script>
+        async function submitNews() {
+            const title = document.getElementById('title').value;
+            const category = document.getElementById('category').value;
+            const content = document.getElementById('content').value;
+
+            if(!title || !content) { alert("모든 항목을 채워주세요!"); return; }
+
+            const res = await fetch('/api/news', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, category, content })
+            });
+
+            if(res.ok) {
+                alert("성공적으로 게시되었습니다!");
+                location.href = "/news.html"; // 목록으로 이동
+            }
+        }
+    </script>
+</body>
+</html>
