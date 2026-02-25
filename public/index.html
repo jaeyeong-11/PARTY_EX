@@ -137,6 +137,7 @@
             border-radius: 8px; box-sizing: border-box; font-size: 16px;
         }
 </style>
+    
 
     <link rel="icon" href="/favicon.png?v=1" type="image/png">
     <link rel="apple-touch-icon" href="/favicon.png?v=1">
@@ -160,7 +161,7 @@
     <div class="auth-links">
         <a href="#" onclick="openJoinModal()">당원가입</a>
         <span class="auth-divider">|</span>
-        <a href="#" onclick="alert('로그인 기능은 준비 중입니다!')">로그인</a>
+       <a href="#" onclick="openLoginModal()">로그인</a>
     </div>
 
     <button class="menu-toggle">
@@ -208,6 +209,17 @@
             <p style="text-align: center; color: #888; font-size: 13px; cursor: pointer; margin-top: 15px;" onclick="closeModal()">닫기</p>
         </div>
     </div>
+    
+    <div class="modal" id="loginModal">
+    <div class="modal-content">
+        <h3>당원 로그인</h3>
+        <p>미래연대당에 오신 것을 환영합니다.</p>
+        <input type="text" id="loginName" placeholder="이름을 입력하세요">
+        <input type="email" id="loginEmail" placeholder="이메일 주소를 입력하세요">
+        <button class="btn-support" style="width: 100%; margin-top: 20px;" onclick="submitLogin()">로그인하기</button>
+        <p style="text-align: center; color: #888; font-size: 13px; cursor: pointer; margin-top: 15px;" onclick="closeLoginModal()">닫기</p>
+    </div>
+</div>
 
     <script>
         // 1. 정책 탭 로직 복구
@@ -245,6 +257,7 @@ async function validateAndSubmit() {
         alert('올바른 이메일 형식을 입력해주세요! (예: name@example.com)');
         return;
     }
+    
 
     // 🚀 [추가된 부분] 서버로 데이터 진짜 보내기
     try {
