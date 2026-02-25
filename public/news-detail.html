@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;700&display=swap" rel="stylesheet">
     <link rel="icon" href="/favicon.png?v=1" type="image/png">
     <style>
-        /* 🚩 1. 픽셀 밀림 방지 및 공통 설정 */
         :root {
             --brand-blue: #007acc;
             --brand-navy: #1d458b;
@@ -19,15 +18,12 @@
         html { overflow-y: scroll; } 
         body { font-family: 'Pretendard', sans-serif; margin: 0; background: #fff; color: var(--text-gray); scroll-behavior: smooth; }
 
-        /* 🚩 2. 상단 헤더 (전체 페이지 동기화) */
+        /* 상단 헤더 */
         .main-header { background-color: #fff; border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: 1000; height: 80px; display: flex; align-items: center; }
         .nav-container { width: 100%; max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
-        
-        /* 로고 포인트 복구 */
         .logo { font-size: 26px; font-weight: 800; text-decoration: none; display: flex; align-items: center; }
         .logo-main { color: var(--brand-navy); }
         .logo-point { color: var(--brand-blue); }
-
         .nav-menu { display: flex; list-style: none; gap: 40px; margin: 0; padding: 0; }
         .nav-menu li a { text-decoration: none; color: var(--text-gray); font-weight: 700; font-size: 18px; transition: color 0.2s; }
         .nav-menu li a:hover { color: var(--brand-blue); }
@@ -36,24 +32,26 @@
         .auth-links a { text-decoration: none; color: inherit; transition: color 0.2s; }
         .auth-links a:hover { color: var(--brand-blue); }
         .auth-divider { color: #ddd; font-size: 12px; }
+        .nav-right { display: flex; align-items: center; }
 
-        /* 햄버거 버튼 */
         .menu-toggle { background-color: var(--brand-blue); color: white; border: none; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; height: 80px; width: 90px; }
         .menu-toggle span { font-size: 12px; font-weight: bold; margin-top: 5px; }
         .hamburger { width: 25px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; }
         .hamburger span { width: 100%; height: 2px; background-color: white; }
 
-        /* 🚩 3. 상세 페이지 디자인 */
+        /* 상세 페이지 디자인 */
         .container { max-width: 1100px; margin: 60px auto; padding: 0 20px; }
         .detail-header { border-top: 2px solid #333; border-bottom: 1px solid #eee; padding: 30px 0; margin-bottom: 40px; }
         .detail-title { font-size: 26px; font-weight: 800; line-height: 1.4; margin-bottom: 15px; text-align: left; }
         .detail-meta { display: flex; justify-content: flex-end; color: #888; font-size: 14px; }
         .detail-content { font-size: 17px; line-height: 1.9; color: #444; min-height: 400px; white-space: pre-wrap; margin-bottom: 60px; text-align: left; }
-        .content-sub-title { font-size: 22px; font-weight: 800; text-align: center; margin-bottom: 50px; display: block; color: #000; }
         .detail-footer { border-top: 1px solid #eee; padding-top: 30px; text-align: left; margin-bottom: 40px; }
         .footer-sign { font-weight: bold; font-size: 16px; line-height: 1.8; color: #222; }
-        .btn-area { display: flex; justify-content: flex-end; }
-        .btn-list { background: var(--brand-navy); color: white; padding: 12px 30px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 15px; transition: 0.3s; }
+
+        /* 하단 버튼 영역 */
+        .btn-area { display: flex; justify-content: flex-end; gap: 10px; }
+        .btn-list { background: var(--brand-navy); color: white; padding: 12px 30px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 15px; border: none; cursor: pointer; }
+        .btn-delete { background: #ff4d4d; color: white; padding: 12px 30px; border-radius: 4px; border: none; font-weight: bold; font-size: 15px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -68,7 +66,7 @@
                 <li><a href="/#support">지지현황</a></li>
                 <li><a href="/news.html">정당소식</a></li>
             </ul>
-            <div class="nav-right" style="display:flex; align-items:center;">
+            <div class="nav-right">
                 <div class="auth-links" id="authArea"></div>
                 <button class="menu-toggle">
                     <div class="hamburger"><span></span><span></span><span></span></div>
@@ -85,17 +83,16 @@
                 작성일자 &nbsp; <span id="dispDate">0000. 00. 00. 00:00</span>
             </div>
         </div>
-        <div class="detail-content">
-            <strong class="content-sub-title" id="dispSubTitle"></strong>
-            <div id="dispBody">내용을 불러오고 있습니다.</div>
-        </div>
+        <div class="detail-content" id="dispBody">내용을 불러오고 있습니다.</div>
         <div class="detail-footer">
             <div class="footer-sign">
                 <span id="signDate">0000년 00월 00일</span><br>
                 <span id="signAuthor">미래연대당 대변인실</span>
             </div>
         </div>
+
         <div class="btn-area">
+            <button class="btn-delete" onclick="deleteNews()">삭제</button>
             <a href="/news.html" class="btn-list">목록</a>
         </div>
     </div>
@@ -109,16 +106,11 @@
             try {
                 const res = await fetch(`/api/news/${newsId}`);
                 if (!res.ok) throw new Error();
-const data = await res.json();
+                const data = await res.json();
 
-    // 🚩 상단 헤더 제목 (카테고리 중복 방지)
-    document.getElementById('dispTitle').innerText = data.title; 
-    
-    // 🚩 본문 중앙 제목 (중복이 싫다면 이 줄을 주석처리하거나 삭제하세요)
-    // document.getElementById('dispSubTitle').innerText = data.title; 
-
-    document.getElementById('dispDate').innerText = new Date(data.created_at).toLocaleString();
-    document.getElementById('dispBody').innerText = data.content;
+                document.getElementById('dispTitle').innerText = data.title;
+                document.getElementById('dispDate').innerText = new Date(data.created_at).toLocaleString();
+                document.getElementById('dispBody').innerText = data.content;
                 document.getElementById('signDate').innerText = new Date(data.created_at).toLocaleDateString('ko-KR', {
                     year: 'numeric', month: 'long', day: 'numeric'
                 });
@@ -127,7 +119,29 @@ const data = await res.json();
             }
         }
 
-        // 2. 상단 바 동기화 및 꼬인 문법 수정
+        // 2. 게시물 삭제 기능
+        async function deleteNews() {
+            const pw = prompt("관리자 암호를 입력하세요.");
+            if (pw !== "1234") { 
+                alert("암호가 틀렸습니다.");
+                return;
+            }
+
+            if (!confirm("정말 이 게시물을 삭제하시겠습니까?")) return;
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+
+            try {
+                const res = await fetch(`/api/news/${id}`, { method: 'DELETE' });
+                if (res.ok) {
+                    alert("삭제되었습니다.");
+                    location.href = "/news.html";
+                }
+            } catch (e) { alert("삭제 실패!"); }
+        }
+
+        // 3. 상단 바 동기화
         function updateHeaderUI() {
             const userName = localStorage.getItem('userName');
             const authArea = document.getElementById('authArea');
@@ -135,17 +149,15 @@ const data = await res.json();
 
             if (userName) {
                 authArea.innerHTML = `
-                    <a href="/mypage.html" style="color:var(--brand-navy); font-weight:bold; text-decoration:none; margin-right:5px;">
-                        ${userName} 당원님
-                    </a>
+                    <a href="/mypage.html" style="color:var(--brand-navy); font-weight:bold; text-decoration:none; margin-right:5px;">${userName} 당원님</a>
                     <span class="auth-divider">|</span>
                     <a href="#" onclick="logout()">로그아웃</a>
                 `;
             } else {
                 authArea.innerHTML = `
-                    <a href="/" onclick="alert('가입은 메인페이지에서 가능합니다.')">당원가입</a>
+                    <a href="/" onclick="alert('메인페이지로 이동합니다.')">당원가입</a>
                     <span class="auth-divider">|</span>
-                    <a href="/" onclick="alert('로그인은 메인페이지에서 가능합니다.')">로그인</a>
+                    <a href="/" onclick="alert('메인페이지로 이동합니다.')">로그인</a>
                 `;
             }
         }
@@ -161,30 +173,6 @@ const data = await res.json();
             loadDetail();
             updateHeaderUI();
         };
-
-        <div class="btn-area">
-    <button onclick="deleteNews()" style="background:#ff4d4d; color:white; padding:10px 25px; border:none; border-radius:4px; cursor:pointer; font-weight:bold; margin-right:10px;">삭제</button>
-    <a href="/news.html" class="btn-list">목록</a>
-</div>
-
-async function deleteNews() {
-    const pw = prompt("관리자 암호를 입력하세요.");
-    if (pw !== "1234") { // 설정하신 암호
-        alert("암호가 틀렸습니다.");
-        return;
-    }
-
-    if (!confirm("정말 이 게시물을 삭제하시겠습니까?")) return;
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('id');
-
-    const res = await fetch(`/api/news/${id}`, { method: 'DELETE' });
-    if (res.ok) {
-        alert("삭제되었습니다.");
-        location.href = "/news.html";
-    }
-}
     </script>
 </body>
 </html>
