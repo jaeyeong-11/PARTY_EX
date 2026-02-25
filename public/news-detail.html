@@ -191,6 +191,22 @@ function checkAdminPermission() {
         btnArea.innerHTML = `<a href="/news.html" class="btn-list">목록</a>`;
     }
 }
+        
+// HTML 파일(index, news 등)의 submitLogin 함수 내부
+async function submitLogin() {
+    // ... (fetch 요청 코드) ...
+    if(res.ok) {
+        const data = await res.json();
+        
+        // 🚩 서버가 준 정보를 브라우저 메모리(localStorage)에 저장합니다.
+        localStorage.setItem('userName', data.userName);
+        localStorage.setItem('isAdmin', data.isAdmin); // true 또는 false가 저장됨
+        
+        alert(`${data.userName}님, 환영합니다!`);
+        location.reload(); // 페이지 새로고침해서 메뉴 바뀌게 함
+    }
+}
+        
     </script>
 </body>
 </html>
