@@ -173,6 +173,22 @@
             updateHeaderUI();
             checkAdminPermission();
         };
+
+        async function submitLogin() {
+    // ... 이메일, 이름 가져오는 코드 ...
+    const res = await fetch('/api/login', { /* ... */ });
+    
+    if (res.ok) {
+        const data = await res.json();
+        
+        // 🚩 이 두 줄이 있어야 브라우저가 기억을 합니다!
+        localStorage.setItem('userName', data.userName);
+        localStorage.setItem('isAdmin', data.isAdmin); // ← 이게 null을 방지함
+        
+        alert("관리자님, 환영합니다!");
+        location.reload();
+    }
+}
     </script>
 </body>
 </html>
