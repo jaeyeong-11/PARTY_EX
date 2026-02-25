@@ -47,7 +47,36 @@
         .nav-menu li a { text-decoration: none; color: var(--text-gray); font-weight: 700; font-size: 18px; transition: color 0.2s; }
         .nav-menu li a:hover { color: var(--brand-blue); }
 
-        .nav-right { display: flex; align-items: center; gap: 20px; }
+       /* 상단 오른쪽 링크 스타일 */
+.auth-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 20px; /* 햄버거 버튼과의 간격 */
+    font-size: 14px;
+    color: #666;
+}
+
+.auth-links a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s;
+}
+
+.auth-links a:hover {
+    color: var(--brand-blue);
+}
+
+.auth-divider {
+    color: #ddd;
+    font-size: 12px;
+}
+
+/* nav-right 내부 정렬 수정 */
+.nav-right {
+    display: flex;
+    align-items: center;
+}
 
         /* 전체메뉴 버튼 컬러: 파랑 */
         .menu-toggle {
@@ -126,12 +155,18 @@
                 <li><a href="/news.html">정당소식</a></li>
             </ul>
 
-            <div class="nav-right">
-                <button class="menu-toggle">
-                    <div class="hamburger"><span></span><span></span><span></span></div>
-                    <span>전체메뉴</span>
-                </button>
-            </div>
+<div class="nav-right">
+    <div class="auth-links">
+        <a href="#" onclick="openJoinModal()">당원가입</a>
+        <span class="auth-divider">|</span>
+        <a href="#" onclick="alert('로그인 기능은 준비 중입니다!')">로그인</a>
+    </div>
+
+    <button class="menu-toggle">
+        <div class="hamburger"><span></span><span></span><span></span></div>
+        <span>전체메뉴</span>
+    </button>
+</div>
         </nav>
     </header>
 
@@ -264,6 +299,8 @@ window.onload = async function() {
 
         function openModal() { document.getElementById('modal').style.display = 'flex'; }
         function closeModal() { document.getElementById('modal').style.display = 'none'; }
+        // 스크립트 맨 아래에 이 한 줄만 추가해도 해결됩니다!
+function openJoinModal() { openModal(); }
     </script>
 </body>
 </html>
