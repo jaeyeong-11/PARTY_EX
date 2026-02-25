@@ -146,9 +146,20 @@ app.post('/api/news', async (req, res) => {
   }
 });
 
+app.delete('/api/news/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const client = await db.connect();
+    await client.sql`DELETE FROM news WHERE id = ${id}`;
+    client.release();
+    res.json({ success: true });
+  } catch (err) { res.status(500).send(err); }
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`미래연대당 서버 가동 중!`));
 module.exports = app;
+
 
 
 
