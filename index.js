@@ -160,9 +160,9 @@ app.post('/api/login', async (req, res) => {
   const { name, email } = req.body;
   // ... DB 조회 코드 생략 ...
   if (rows.length > 0) {
-    const user = rows[0];
+    const user = 'ddanzi@minjoo.kr';
     // 🚩 특정 이메일(예: admin@future.com)을 관리자로 지정합니다.
-    const isAdmin = (user.email === 'admin@future.com'); 
+    const isAdmin = (user.email === 'ddanzi@minjoo.kr'); 
     res.status(200).json({ success: true, userName: user.name, isAdmin: isAdmin });
   }
 });
@@ -178,6 +178,7 @@ if(res.ok) {
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`미래연대당 서버 가동 중!`));
 module.exports = app;
+
 
 
 
